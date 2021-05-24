@@ -1,0 +1,54 @@
+{
+    "name": "chronhub/projector",
+    "description": "projector read model",
+    "keywords": [],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "steph bug",
+            "email": "chronhubgit@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "^8.0",
+        "chronhub/foundation": "dev-main",
+        "chronhub/chronicler": "dev-main",
+        "marc-mabe/php-enum": "^4.4",
+        "ext-pdo": "*",
+        "ext-json": "*"
+    },
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "^2.18.4",
+        "jetbrains/phpstorm-attributes": "9999999-dev",
+        "laravel/framework": "8.x",
+        "nunomaduro/larastan": "0.6.x-dev",
+        "orchestra/testbench": "6.x",
+        "phpspec/prophecy-phpunit": "dev-master",
+        "phpstan/phpstan": "0.12.x-dev",
+        "phpunit/phpunit": "^9.4",
+        "roave/security-advisories": "dev-master"
+    },
+    "autoload": {
+        "psr-4": {
+            "Chronhub\\Projector\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Chronhub\\Projector\\Tests\\": "tests"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit"
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "laravel": {
+            "providers": [],
+            "dont-discover": []
+        }
+    },
+    "minimum-stability": "dev"
+}
