@@ -47,7 +47,7 @@ final class DefaultManager implements Manager
 
         $repository = $this->createProjectorRepository($context, $streamName, null);
 
-        return new ProjectReadModel($context, $repository, $this->chronicler, $streamName, null);
+        return new ProjectProjection($context, $repository, $this->chronicler, $streamName);
     }
 
     public function createReadModelProjection(string $streamName, ReadModel $readModel, array $options = []): ProjectorFactory
@@ -97,7 +97,7 @@ final class DefaultManager implements Manager
             throw ProjectionNotFound::withName($name);
         }
 
-        return json_decode($projection->position());
+        return json_decode($projection->position(), true);
     }
 
     public function stateOf(string $name): array
@@ -108,7 +108,7 @@ final class DefaultManager implements Manager
             throw ProjectionNotFound::withName($name);
         }
 
-        return json_decode($projection->state());
+        return json_decode($projection->state(), true);
     }
 
     public function filterNamesOf(string ...$names): array

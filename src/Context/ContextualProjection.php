@@ -9,7 +9,7 @@ use Chronhub\Projector\Support\Contracts\ProjectionProjector;
 
 final class ContextualProjection
 {
-    private ?string $currentStreamName;
+    private ?string $currentStreamName = null;
 
     public function __construct(private ProjectionProjector $projector,
                                 ?string &$currentStreamName)

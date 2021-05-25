@@ -33,10 +33,10 @@ trait InteractWithRepository
         }
 
         $this->context->streamPosition()->discover(
-            json_decode($projection->position())
+            json_decode($projection->position(), true)
         );
 
-        $state = json_decode($projection->state());
+        $state = json_decode($projection->state(), true);
 
         if (is_array($state) && count($state) > 0) {
             $this->context->state()->setState($state);
@@ -53,6 +53,7 @@ trait InteractWithRepository
         try {
             $success = $this->provider->updateProjection($this->streamName, [
                 'status' => $idleProjection->getValue(),
+                //'locked_until' => null,
             ]);
         } catch (QueryException $queryException) {
             throw QueryFailure::fromQueryException($queryException);

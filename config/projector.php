@@ -1,0 +1,92 @@
+<?php
+
+declare(strict_types=1);
+
+use Chronhub\Projector\Model\Projection;
+use Chronhub\Projector\Model\InMemoryProjectionProvider;
+use Chronhub\Projector\Support\Option\InMemoryProjectorOption;
+use Chronhub\Projector\Support\Scope\PgsqlProjectionQueryScope;
+use Chronhub\Projector\Support\Scope\InMemoryProjectionQueryScope;
+
+return [
+    /*
+    |--------------------------------------------------------------------------
+    | Projection provider
+    |--------------------------------------------------------------------------
+    |
+    */
+
+    'provider' => [
+        'eloquent' => Projection::class,
+
+        'in_memory' => InMemoryProjectionProvider::class,
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Projectors
+    |--------------------------------------------------------------------------
+    |
+    | Each projector is tied to an event store
+    | caution as Dev is responsible to match connection between various services
+    |
+    |       chronicler:                 chronicler configuration key
+    |       options:                    options key
+    |       provider:                   projection provider key
+    |       event_stream_provider:      from chronicler configuration key
+    |       dispatch_projector_events:  dispatch on event projection status (start, stop, reset, delete)
+    |       scope:                      projection query filter
+    */
+
+    'projectors' => [
+        'default' => [
+            'chronicler'                => 'pgsql',
+            'options'                   => 'lazy',
+            'provider'                  => 'eloquent',
+            'event_stream_provider'     => 'eloquent',
+            'dispatch_projector_events' => true,
+            'scope'                     => PgsqlProjectionQueryScope::class,
+        ],
+
+        'in_memory' => [
+            'chronicler'            => 'in_memory',
+            'options'               => 'in_memory',
+            'provider'              => 'in_memory',
+            'event_stream_provider' => 'in_memory',
+            'scope'                 => InMemoryProjectionQueryScope::class,
+        ],
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Projector options
+    |--------------------------------------------------------------------------
+    |
+    | Options can be an array or a service implementing projector option contract
+    | with pre defined options which can not be mutated
+    |
+    */
+    'options'    => [
+        'default' => [],
+
+        'in_memory' => InMemoryProjectorOption::class,
+
+        'snapshot' => [],
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Console and commands
+    |--------------------------------------------------------------------------
+    |
+    */
+    'console'    => [
+        'load_migrations' => true,
+
+        'load_commands' => true,
+
+        'commands' => [
+            // commands below are only meant to optimize projection queries
+        ],
+    ],
+];

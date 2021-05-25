@@ -5,15 +5,15 @@ declare(strict_types=1);
 namespace Chronhub\Projector\Concerns;
 
 use Chronhub\Projector\Context\Context;
-use Chronhub\Projector\Factory\DefaultOption;
 use Chronhub\Projector\Factory\DetectGap;
 use Chronhub\Projector\Factory\EventCounter;
+use Chronhub\Projector\Factory\DefaultOption;
 use Chronhub\Projector\Factory\StreamPosition;
-use Chronhub\Projector\Repository\ProjectionRepository;
-use Chronhub\Projector\Repository\ReadModelRepository;
 use Chronhub\Projector\Repository\RepositoryLock;
-use Chronhub\Projector\Support\Contracts\Factory\Option;
 use Chronhub\Projector\Support\Contracts\Repository;
+use Chronhub\Projector\Repository\ReadModelRepository;
+use Chronhub\Projector\Repository\ProjectionRepository;
+use Chronhub\Projector\Support\Contracts\Factory\Option;
 use Chronhub\Projector\Support\Contracts\Support\ReadModel;
 use function array_merge;
 

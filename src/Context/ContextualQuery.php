@@ -4,14 +4,13 @@ declare(strict_types=1);
 
 namespace Chronhub\Projector\Context;
 
-use Chronhub\Projector\Support\Contracts\Support\ReadModel;
-use Chronhub\Projector\Support\Contracts\ReadModelProjector;
+use Chronhub\Projector\Support\Contracts\QueryProjector;
 
-final class ContextualReadModel
+final class ContextualQuery
 {
     private ?string $currentStreamName = null;
 
-    public function __construct(private ReadModelProjector $projector,
+    public function __construct(private QueryProjector $projector,
                                 ?string &$currentStreamName)
     {
         $this->currentStreamName = &$currentStreamName;
@@ -20,11 +19,6 @@ final class ContextualReadModel
     public function stop(): void
     {
         $this->projector->stop();
-    }
-
-    public function readModel(): ReadModel
-    {
-        return $this->projector->readModel();
     }
 
     public function streamName(): ?string

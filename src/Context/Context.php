@@ -19,10 +19,10 @@ use Chronhub\Projector\Support\Contracts\ProjectionQueryFilter;
 use function is_array;
 
 /**
- * @method static array streamNames()
- * @method static callable eventHandlers()
- * @method static ProjectionQueryFilter queryFilter()
- * @method static Timer timer()
+ * @method array                 streamNames()
+ * @method callable              eventHandlers()
+ * @method ProjectionQueryFilter queryFilter()
+ * @method Timer                 timer()
  */
 class Context
 {
@@ -122,6 +122,6 @@ class Context
 
     public function __call(string $method, array $arguments): mixed
     {
-        return call_user_func_array([$this, $this->factory], $arguments);
+        return call_user_func_array([$this->factory, $method], $arguments);
     }
 }

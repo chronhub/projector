@@ -9,6 +9,8 @@ use Chronhub\Foundation\Support\Contracts\Clock\Clock;
 use Chronhub\Projector\Exception\InvalidArgumentException;
 use Chronhub\Projector\Support\Contracts\Model\ProjectionModel;
 use Chronhub\Projector\Support\Contracts\Model\ProjectionProvider;
+use function in_array;
+use function array_key_exists;
 
 final class InMemoryProjectionProvider implements ProjectionProvider
 {
@@ -49,10 +51,21 @@ final class InMemoryProjectionProvider implements ProjectionProvider
             return false;
         }
 
-        $projection->setState($data['state'] ?? null);
-        $projection->setPosition($data['position'] ?? null);
-        $projection->setStatus($data['status'] ?? null);
-        $projection->setLockedUntil($data['locked_until'] ?? null);
+        if (isset($data['state'])) {
+            $projection->setState($data['state']);
+        }
+
+        if (isset($data['position'])) {
+            $projection->setPosition($data['position']);
+        }
+
+        if (isset($data['status'])) {
+            $projection->setStatus($data['status']);
+        }
+
+        if (array_key_exists('locked_until', $data)) {
+            $projection->setLockedUntil($data['locked_until']);
+        }
 
         return true;
     }

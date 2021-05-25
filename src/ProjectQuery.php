@@ -5,7 +5,12 @@ declare(strict_types=1);
 namespace Chronhub\Projector;
 
 use Chronhub\Projector\Context\Context;
+use Chronhub\Projector\Pipe\HandleTimer;
+use Chronhub\Projector\Pipe\DispatchSignal;
 use Chronhub\Projector\Context\ContextFactory;
+use Chronhub\Projector\Pipe\HandleStreamEvent;
+use Chronhub\Projector\Context\ContextualQuery;
+use Chronhub\Projector\Pipe\PrepareQueryRunner;
 use Chronhub\Projector\Concerns\InteractWithContext;
 use Chronhub\Chronicler\Support\Contracts\Chronicler;
 use Chronhub\Projector\Support\Contracts\QueryProjector;
@@ -47,8 +52,18 @@ final class ProjectQuery implements QueryProjector, ProjectorFactory
         return $this->context->state()->getState();
     }
 
+    protected function contextualEventHandler(): ContextualQuery
+    {
+        return new ContextualQuery($this, $this->context->currentStreamName);
+    }
+
     private function pipes(): array
     {
-        return [];
+        return [
+            new HandleTimer($this),
+            new PrepareQueryRunner(),
+            new HandleStreamEvent($this->chronicler, null),
+            new DispatchSignal(),
+        ];
     }
 }

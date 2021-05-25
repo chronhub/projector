@@ -52,6 +52,11 @@ class DetectGap
         ++$this->retries;
     }
 
+    public function resetGap(): void
+    {
+        $this->gapDetected = false;
+    }
+
     public function resetRetries(): void
     {
         $this->retries = 0;

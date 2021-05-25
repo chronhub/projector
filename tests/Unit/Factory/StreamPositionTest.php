@@ -23,7 +23,7 @@ final class StreamPositionTest extends TestCaseWithProphecy
 
         $streamPosition->watch(['names' => ['account', 'customer']]);
 
-        $this->assertEquals(['customer' => 0, 'account' => 0], $streamPosition->toArray());
+        $this->assertEquals(['customer' => 0, 'account' => 0], $streamPosition->all());
     }
 
     /**
@@ -41,7 +41,7 @@ final class StreamPositionTest extends TestCaseWithProphecy
 
         $streamPosition->watch(['all' => true]);
 
-        $this->assertEquals(['customer' => 0, 'account' => 0], $streamPosition->toArray());
+        $this->assertEquals(['customer' => 0, 'account' => 0], $streamPosition->all());
     }
 
     /**
@@ -59,7 +59,7 @@ final class StreamPositionTest extends TestCaseWithProphecy
 
         $streamPosition->watch(['categories' => ['account', 'customer']]);
 
-        $this->assertEquals(['customer-123' => 0, 'account-123' => 0], $streamPosition->toArray());
+        $this->assertEquals(['customer-123' => 0, 'account-123' => 0], $streamPosition->all());
     }
 
     /**
@@ -73,7 +73,7 @@ final class StreamPositionTest extends TestCaseWithProphecy
 
         $streamPosition->watch(['names' => ['account', 'customer']]);
 
-        $this->assertEquals(['customer' => 0, 'account' => 0], $streamPosition->toArray());
+        $this->assertEquals(['customer' => 0, 'account' => 0], $streamPosition->all());
     }
 
     /**
@@ -106,7 +106,7 @@ final class StreamPositionTest extends TestCaseWithProphecy
 
         $streamPosition->discover(['account' => 25, 'customer' => 25]);
 
-        $this->assertEquals(['customer' => 25, 'account' => 25], $streamPosition->toArray());
+        $this->assertEquals(['customer' => 25, 'account' => 25], $streamPosition->all());
     }
 
     /**
@@ -122,7 +122,7 @@ final class StreamPositionTest extends TestCaseWithProphecy
 
         $streamPosition->discover(['account' => 25, 'customer' => 25, 'passwords' => 10]);
 
-        $this->assertEquals(['customer' => 25, 'account' => 25, 'passwords' => 10], $streamPosition->toArray());
+        $this->assertEquals(['customer' => 25, 'account' => 25, 'passwords' => 10], $streamPosition->all());
     }
 
     /**
@@ -138,11 +138,11 @@ final class StreamPositionTest extends TestCaseWithProphecy
 
         $streamPosition->discover(['account' => 25, 'customer' => 25]);
 
-        $this->assertEquals(['customer' => 25, 'account' => 25], $streamPosition->toArray());
+        $this->assertEquals(['customer' => 25, 'account' => 25], $streamPosition->all());
 
         $streamPosition->bind('account', 26);
 
-        $this->assertEquals(['customer' => 25, 'account' => 26], $streamPosition->toArray());
+        $this->assertEquals(['customer' => 25, 'account' => 26], $streamPosition->all());
     }
 
     /**
@@ -156,11 +156,11 @@ final class StreamPositionTest extends TestCaseWithProphecy
 
         $streamPosition->watch(['names' => ['account', 'customer']]);
 
-        $this->assertEquals(['customer' => 0, 'account' => 0], $streamPosition->toArray());
+        $this->assertEquals(['customer' => 0, 'account' => 0], $streamPosition->all());
 
         $streamPosition->reset();
 
-        $this->assertEquals([], $streamPosition->toArray());
+        $this->assertEquals([], $streamPosition->all());
     }
 
     /**

@@ -52,7 +52,7 @@ class StreamPosition
     /**
      * @return array<string,int>
      */
-    public function toArray(): array
+    public function all(): array
     {
         return $this->container->toArray();
     }

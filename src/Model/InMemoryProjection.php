@@ -21,32 +21,24 @@ final class InMemoryProjection implements ProjectionModel
         return new self($name, '{}', '{}', $status, null);
     }
 
-    public function setPosition(?string $position): void
+    public function setPosition(string $position): void
     {
-        if ($position) {
-            $this->position = $position;
-        }
+        $this->position = $position;
     }
 
-    public function setState(?string $state): void
+    public function setState(string $state): void
     {
-        if ($state) {
-            $this->state = $state;
-        }
+        $this->state = $state;
     }
 
-    public function setStatus(?string $status): void
+    public function setStatus(string $status): void
     {
-        if ($status) {
-            $this->status = $status;
-        }
+        $this->status = $status;
     }
 
     public function setLockedUntil(?string $lockedUntil): void
     {
-        if ($lockedUntil) {
-            $this->lockedUntil = $lockedUntil;
-        }
+        $this->lockedUntil = $lockedUntil;
     }
 
     public function name(): string

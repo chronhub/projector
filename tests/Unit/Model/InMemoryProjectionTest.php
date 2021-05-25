@@ -26,30 +26,44 @@ final class InMemoryProjectionTest extends TestCase
     /**
      * @test
      */
-    public function it_set_non_value_only(): void
+    public function it_set_state(): void
     {
         $projection = InMemoryProjection::create('customer', 'running');
 
-        $projection->setState(null);
+        $projection->setState('{}');
         $this->assertEquals('{}', $projection->state());
+
         $projection->setState('{"count": 10}');
         $this->assertEquals('{"count": 10}', $projection->state());
+    }
 
-        $projection->setPosition(null);
+    /**
+     * @test
+     */
+    public function it_set_position(): void
+    {
+        $projection = InMemoryProjection::create('customer', 'running');
+
+        $projection->setPosition('{}');
         $this->assertEquals('{}', $projection->position());
+
         $projection->setPosition('{"account": 10}');
         $this->assertEquals('{"account": 10}', $projection->position());
+    }
+
+    /**
+     * @test
+     */
+    public function it_set_locked_until(): void
+    {
+        $projection = InMemoryProjection::create('customer', 'running');
 
         $this->assertNull($projection->lockedUntil());
+
         $projection->setLockedUntil('lock');
         $this->assertEquals('lock', $projection->lockedUntil());
-        $projection->setLockedUntil(null);
-        $this->assertEquals('lock', $projection->lockedUntil());
 
-        $this->assertEquals('running', $projection->status());
-        $projection->setStatus(null);
-        $this->assertEquals('running', $projection->status());
-        $projection->setStatus('idle');
-        $this->assertEquals('idle', $projection->status());
+        $projection->setLockedUntil(null);
+        $this->assertEquals(null, $projection->lockedUntil());
     }
 }

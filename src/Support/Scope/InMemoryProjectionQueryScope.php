@@ -10,12 +10,13 @@ use Chronhub\Foundation\Support\Contracts\Message\Header;
 use Chronhub\Chronicler\Driver\InMemory\InMemoryQueryScope;
 use Chronhub\Projector\Support\Contracts\ProjectionQueryScope;
 use Chronhub\Projector\Support\Contracts\ProjectionQueryFilter;
+use Chronhub\Chronicler\Support\Contracts\Query\InMemoryQueryFilter;
 
 class InMemoryProjectionQueryScope extends InMemoryQueryScope implements ProjectionQueryScope
 {
     public function fromIncludedPosition(): ProjectionQueryFilter
     {
-        return new class() implements ProjectionQueryFilter {
+        return new class() implements ProjectionQueryFilter, InMemoryQueryFilter {
             private int $currentPosition = 0;
 
             public function setCurrentPosition(int $position): void
@@ -25,7 +26,6 @@ class InMemoryProjectionQueryScope extends InMemoryQueryScope implements Project
 
             public function filterQuery(): callable
             {
-                // checkMe streams should always been ordered ascendant
                 $position = $this->currentPosition;
 
                 if ($position <= 0) {
@@ -37,6 +37,11 @@ class InMemoryProjectionQueryScope extends InMemoryQueryScope implements Project
 
                     return $isGreaterThanPosition ? $event : null;
                 };
+            }
+
+            public function orderBy(): string
+            {
+                return 'asc';
             }
         };
     }

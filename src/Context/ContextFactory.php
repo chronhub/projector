@@ -7,7 +7,9 @@ namespace Chronhub\Projector\Context;
 use Closure;
 use Chronhub\Projector\Factory\NoOpTimer;
 use Chronhub\Projector\Factory\ProjectorTimer;
+use Chronhub\Projector\Factory\ArrayEventHandler;
 use Chronhub\Projector\Exception\RuntimeException;
+use Chronhub\Projector\Factory\ClosureEventHandler;
 use Chronhub\Projector\Support\Contracts\Factory\Timer;
 use Chronhub\Projector\Support\Contracts\ProjectionQueryFilter;
 use function count;
@@ -101,10 +103,10 @@ final class ContextFactory
     public function eventHandlers(): callable
     {
         if ($this->eventHandlers instanceof Closure) {
-            return new ClosureEventProcessor($this->eventHandlers);
+            return new ClosureEventHandler($this->eventHandlers);
         }
 
-        return new ArrayEventProcessor($this->eventHandlers);
+        return new ArrayEventHandler($this->eventHandlers);
     }
 
     public function streamNames(): array

@@ -15,7 +15,8 @@
         "chronhub/chronicler": "dev-main",
         "marc-mabe/php-enum": "^4.4",
         "ext-pdo": "*",
-        "ext-json": "*"
+        "ext-json": "*",
+        "ext-pcntl": "*"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^2.18.4",
