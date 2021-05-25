@@ -34,8 +34,6 @@ final class HandleStreamEvent
             }
         }
 
-        $context->gap()->resetRetries();
-
         return $next($context);
     }
 
