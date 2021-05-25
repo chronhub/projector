@@ -5,6 +5,11 @@ declare(strict_types=1);
 namespace Chronhub\Projector\Tests\Functional;
 
 use Chronhub\Projector\Model\Projection;
+use Chronhub\Projector\Support\Console\ProjectAllStreamCommand;
+use Chronhub\Projector\Support\Console\ProjectCategoryStreamCommand;
+use Chronhub\Projector\Support\Console\ProjectMessageNameCommand;
+use Chronhub\Projector\Support\Console\ReadProjectionCommand;
+use Chronhub\Projector\Support\Console\WriteProjectionCommand;
 use Illuminate\Contracts\Config\Repository;
 use Chronhub\Projector\Support\Facade\Project;
 use Chronhub\Projector\ProjectorServiceProvider;
@@ -85,7 +90,13 @@ final class ProjectorServiceProviderTest extends TestCaseWithOrchestra
             'console'    => [
                 'load_migrations' => true,
                 'load_commands' => true,
-                'commands' => [],
+                'commands' => [
+                    ReadProjectionCommand::class,
+                    WriteProjectionCommand::class,
+                    ProjectAllStreamCommand::class,
+                    ProjectCategoryStreamCommand::class,
+                    ProjectMessageNameCommand::class,
+                ],
             ],
         ]);
     }
