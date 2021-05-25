@@ -93,8 +93,8 @@ final class DefaultServiceManager implements ServiceManager
 
         $eventStream = $this->app[Repository::class]->get("chronicler.provider.$eventStreamKey");
 
-        if ( ! is_string($eventStream) or ! $this->app->bound($eventStream)) {
-            throw new InvalidArgumentException("Event stream provider with key $eventStreamKey must be a string and registered in ioc");
+        if ( ! is_string($eventStream)) {
+            throw new InvalidArgumentException("Event stream provider with key $eventStreamKey must be a string");
         }
 
         return $this->app->make($eventStream);
