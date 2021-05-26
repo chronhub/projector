@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Chronhub\Projector;
 
+use Throwable;
 use Chronhub\Projector\Context\Context;
 use Chronhub\Projector\Factory\Pipeline;
 use Chronhub\Projector\Support\Contracts\Repository;
@@ -21,10 +22,25 @@ class ProjectorRunner
 
         $pipeline->through($this->pipes);
 
-        do {
-            $isStopped = $pipeline
-                ->send($context)
-                ->then(fn (Context $context): bool => $context->runner()->isStopped());
-        } while ($context->runner()->inBackground() && ! $isStopped);
+        $exception = null;
+
+        try {
+            do {
+                $isStopped = $pipeline
+                    ->send($context)
+                    ->then(fn (Context $context): bool => $context->runner()->isStopped());
+            } while ($context->runner()->inBackground() && ! $isStopped);
+        } catch (Throwable $e) {
+            $exception = $e;
+        } finally {
+            // already handle in pipeline
+            if ( ! $exception && $this->repository) {
+                $this->repository->releaseLock();
+            }
+
+            if ($exception) {
+                throw $exception;
+            }
+        }
     }
 }
