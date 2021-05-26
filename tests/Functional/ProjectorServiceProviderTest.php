@@ -5,11 +5,6 @@ declare(strict_types=1);
 namespace Chronhub\Projector\Tests\Functional;
 
 use Chronhub\Projector\Model\Projection;
-use Chronhub\Projector\Support\Console\ProjectAllStreamCommand;
-use Chronhub\Projector\Support\Console\ProjectCategoryStreamCommand;
-use Chronhub\Projector\Support\Console\ProjectMessageNameCommand;
-use Chronhub\Projector\Support\Console\ReadProjectionCommand;
-use Chronhub\Projector\Support\Console\WriteProjectionCommand;
 use Illuminate\Contracts\Config\Repository;
 use Chronhub\Projector\Support\Facade\Project;
 use Chronhub\Projector\ProjectorServiceProvider;
@@ -17,10 +12,15 @@ use Chronhub\Projector\Tests\TestCaseWithOrchestra;
 use Chronhub\Projector\Model\InMemoryProjectionProvider;
 use Chronhub\Projector\Support\Contracts\ServiceManager;
 use Chronhub\Chronicler\Factory\ChroniclerServiceProvider;
+use Chronhub\Projector\Support\Console\ReadProjectionCommand;
+use Chronhub\Projector\Support\Console\WriteProjectionCommand;
 use Chronhub\Projector\Support\Option\InMemoryProjectorOption;
+use Chronhub\Projector\Support\Console\ProjectAllStreamCommand;
 use Chronhub\Projector\Support\Scope\PgsqlProjectionQueryScope;
+use Chronhub\Projector\Support\Console\ProjectMessageNameCommand;
 use Chronhub\Projector\Support\Scope\InMemoryProjectionQueryScope;
 use Chronhub\Foundation\Reporter\Services\FoundationServiceProvider;
+use Chronhub\Projector\Support\Console\ProjectCategoryStreamCommand;
 
 final class ProjectorServiceProviderTest extends TestCaseWithOrchestra
 {

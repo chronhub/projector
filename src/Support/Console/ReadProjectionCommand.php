@@ -1,12 +1,13 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Chronhub\Projector\Support\Console;
 
-use Chronhub\Projector\Exception\InvalidArgumentException;
-use Chronhub\Projector\Support\Contracts\Manager;
-use Chronhub\Projector\Support\Facade\Project;
 use Illuminate\Console\Command;
+use Chronhub\Projector\Support\Facade\Project;
+use Chronhub\Projector\Support\Contracts\Manager;
+use Chronhub\Projector\Exception\InvalidArgumentException;
 
 final class ReadProjectionCommand extends Command
 {

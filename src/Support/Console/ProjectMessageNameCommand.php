@@ -1,13 +1,14 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Chronhub\Projector\Support\Console;
 
+use Closure;
 use Chronhub\Foundation\Aggregate\AggregateChanged;
-use Chronhub\Foundation\Support\Contracts\Message\Header;
 use Chronhub\Foundation\Support\Facade\AliasMessage;
 use Chronhub\Projector\Context\ContextualProjection;
-use Closure;
+use Chronhub\Foundation\Support\Contracts\Message\Header;
 
 final class ProjectMessageNameCommand extends PersistentProjectionCommand
 {
@@ -31,7 +32,6 @@ final class ProjectMessageNameCommand extends PersistentProjectionCommand
 
         return function (AggregateChanged $event) use ($asAlias): void {
             /** @var ContextualProjection $this */
-
             $messageName = $event->header(Header::EVENT_TYPE);
 
             // beware of collusion
@@ -46,7 +46,7 @@ final class ProjectMessageNameCommand extends PersistentProjectionCommand
     private function isMessageNameMustBeAliased(): bool
     {
         if ($this->hasOption('alias')) {
-            return 1 === (int)$this->option('alias');
+            return 1 === (int) $this->option('alias');
         }
 
         return false;

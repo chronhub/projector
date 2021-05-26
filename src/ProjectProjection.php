@@ -23,7 +23,6 @@ final class ProjectProjection implements ProjectorFactory, ProjectionProjector
     use InteractWithContext;
     use InteractWithPersistentProjector;
 
-    private bool $isStreamCreated = false;
     private StreamCache $streamCache;
 
     public function __construct(protected Context $context,
@@ -62,10 +61,10 @@ final class ProjectProjection implements ProjectorFactory, ProjectionProjector
 
     private function persistIfStreamIsFirstCommit(StreamName $streamName): void
     {
-        if ( ! $this->isStreamCreated && ! $this->chronicler->hasStream($streamName)) {
+        if ( ! $this->context->isStreamCreated() && ! $this->chronicler->hasStream($streamName)) {
             $this->chronicler->persistFirstCommit(new Stream($streamName));
 
-            $this->isStreamCreated = true;
+            $this->context->setStreamCreated(true);
         }
     }
 

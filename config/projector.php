@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 use Chronhub\Projector\Model\Projection;
 use Chronhub\Projector\Model\InMemoryProjectionProvider;
-use Chronhub\Projector\Support\Console\ProjectAllStreamCommand;
-use Chronhub\Projector\Support\Console\ProjectCategoryStreamCommand;
-use Chronhub\Projector\Support\Console\ProjectMessageNameCommand;
 use Chronhub\Projector\Support\Console\ReadProjectionCommand;
 use Chronhub\Projector\Support\Console\WriteProjectionCommand;
 use Chronhub\Projector\Support\Option\InMemoryProjectorOption;
+use Chronhub\Projector\Support\Console\ProjectAllStreamCommand;
 use Chronhub\Projector\Support\Scope\PgsqlProjectionQueryScope;
+use Chronhub\Projector\Support\Console\ProjectMessageNameCommand;
 use Chronhub\Projector\Support\Scope\InMemoryProjectionQueryScope;
+use Chronhub\Projector\Support\Console\ProjectCategoryStreamCommand;
 
 return [
     /*

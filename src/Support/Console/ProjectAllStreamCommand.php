@@ -1,10 +1,11 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Chronhub\Projector\Support\Console;
 
-use Chronhub\Foundation\Aggregate\AggregateChanged;
 use Closure;
+use Chronhub\Foundation\Aggregate\AggregateChanged;
 
 final class ProjectAllStreamCommand extends PersistentProjectionCommand
 {

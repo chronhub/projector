@@ -1,13 +1,14 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Chronhub\Projector\Support\Console;
 
-use Chronhub\Projector\Exception\InvalidArgumentException;
-use Chronhub\Projector\Exception\ProjectionNotFound;
-use Chronhub\Projector\Support\Contracts\Manager;
-use Chronhub\Projector\Support\Facade\Project;
 use Illuminate\Console\Command;
+use Chronhub\Projector\Support\Facade\Project;
+use Chronhub\Projector\Support\Contracts\Manager;
+use Chronhub\Projector\Exception\ProjectionNotFound;
+use Chronhub\Projector\Exception\InvalidArgumentException;
 
 final class WriteProjectionCommand extends Command
 {
@@ -30,7 +31,7 @@ final class WriteProjectionCommand extends Command
 
         $this->assertProjectionOperationExists($operation);
 
-        if (!$this->confirmOperation($streamName, $operation)) {
+        if ( ! $this->confirmOperation($streamName, $operation)) {
             return;
         }
 
@@ -69,7 +70,7 @@ final class WriteProjectionCommand extends Command
 
         $this->warn("Status of $streamName projection is $projectionStatus");
 
-        if (!$this->confirm("Are you sure you want to $operation stream name $streamName")) {
+        if ( ! $this->confirm("Are you sure you want to $operation stream name $streamName")) {
             $this->warn("Operation $operation on stream $streamName aborted");
 
             return false;
@@ -85,7 +86,7 @@ final class WriteProjectionCommand extends Command
 
     private function assertProjectionOperationExists(string $operation): void
     {
-        if (!in_array($operation, self::OPERATIONS_AVAILABLE)) {
+        if ( ! in_array($operation, self::OPERATIONS_AVAILABLE)) {
             throw new InvalidArgumentException("Invalid operation $operation");
         }
     }

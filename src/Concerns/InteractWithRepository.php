@@ -53,7 +53,6 @@ trait InteractWithRepository
         try {
             $success = $this->provider->updateProjection($this->streamName, [
                 'status' => $idleProjection->getValue(),
-                //'locked_until' => null,
             ]);
         } catch (QueryException $queryException) {
             throw QueryFailure::fromQueryException($queryException);

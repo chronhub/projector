@@ -1,13 +1,14 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Chronhub\Projector\Support\Console;
 
-use Chronhub\Projector\Support\Contracts\ProjectionQueryFilter;
+use Illuminate\Console\Command;
+use Chronhub\Projector\Support\Facade\Project;
 use Chronhub\Projector\Support\Contracts\ProjectorFactory;
 use Chronhub\Projector\Support\Contracts\Support\ReadModel;
-use Chronhub\Projector\Support\Facade\Project;
-use Illuminate\Console\Command;
+use Chronhub\Projector\Support\Contracts\ProjectionQueryFilter;
 use Symfony\Component\Console\Command\SignalableCommandInterface;
 
 abstract class PersistentProjectionCommand extends Command implements SignalableCommandInterface
@@ -57,7 +58,7 @@ abstract class PersistentProjectionCommand extends Command implements Signalable
     protected function dispatchSignal(): bool
     {
         if ($this->hasOption('signal')) {
-            return (int)$this->option('signal') === 1;
+            return 1 === (int) $this->option('signal');
         }
 
         return self::DISPATCH_SIGNAL;

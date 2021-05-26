@@ -28,6 +28,11 @@ class Context
 {
     public ?string $currentStreamName = null;
 
+    /**
+     * Only for persistent projection no Read Model.
+     */
+    private bool $isStreamCreated = false;
+
     private State $state;
     private Status $status;
     private RunnerController $runner;
@@ -118,6 +123,16 @@ class Context
     public function clock(): Clock
     {
         return $this->clock;
+    }
+
+    public function isStreamCreated(): bool
+    {
+        return $this->isStreamCreated;
+    }
+
+    public function setStreamCreated(bool $isStreamCreated): void
+    {
+        $this->isStreamCreated = $isStreamCreated;
     }
 
     public function __call(string $method, array $arguments): mixed
