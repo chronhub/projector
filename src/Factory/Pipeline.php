@@ -4,20 +4,13 @@ declare(strict_types=1);
 
 namespace Chronhub\Projector\Factory;
 
-use Closure;
-use Throwable;
 use Chronhub\Projector\Context\Context;
-use Chronhub\Projector\Support\Contracts\Repository;
-use Chronhub\Projector\Exception\ProjectionAlreadyRunning;
+use Closure;
 
 class Pipeline
 {
     private array $pipes = [];
     private Context $passable;
-
-    public function __construct(private ?Repository $repository)
-    {
-    }
 
     public function send(Context $passable): self
     {
@@ -51,30 +44,11 @@ class Pipeline
 
     protected function prepareDestination(Closure $destination): Closure
     {
-        try {
-            return fn (Context $passable) => $destination($passable);
-        } catch (Throwable $exception) {
-            $this->releaseLockOnException($exception);
-
-            throw $exception;
-        }
+        return fn(Context $passable) => $destination($passable);
     }
 
     protected function carry(): Closure
     {
-        try {
-            return fn (Closure $stack, callable $pipe) => fn (Context $passable) => $pipe($passable, $stack);
-        } catch (Throwable $exception) {
-            $this->releaseLockOnException($exception);
-
-            throw $exception;
-        }
-    }
-
-    protected function releaseLockOnException(Throwable $exception): void
-    {
-        if ($this->repository && ! $exception instanceof ProjectionAlreadyRunning) {
-            $this->repository->releaseLock();
-        }
+        return fn(Closure $stack, callable $pipe) => fn(Context $passable) => $pipe($passable, $stack);
     }
 }

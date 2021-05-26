@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Chronhub\Projector;
 
+use Chronhub\Projector\Exception\ProjectionAlreadyRunning;
 use Throwable;
 use Chronhub\Projector\Context\Context;
 use Chronhub\Projector\Factory\Pipeline;
@@ -18,7 +19,7 @@ class ProjectorRunner
 
     public function __invoke(Context $context): void
     {
-        $pipeline = new Pipeline($this->repository);
+        $pipeline = new Pipeline();
 
         $pipeline->through($this->pipes);
 
@@ -28,13 +29,12 @@ class ProjectorRunner
             do {
                 $isStopped = $pipeline
                     ->send($context)
-                    ->then(fn (Context $context): bool => $context->runner()->isStopped());
-            } while ($context->runner()->inBackground() && ! $isStopped);
+                    ->then(fn(Context $context): bool => $context->runner()->isStopped());
+            } while ($context->runner()->inBackground() && !$isStopped);
         } catch (Throwable $e) {
             $exception = $e;
         } finally {
-            // already handle in pipeline
-            if ( ! $exception && $this->repository) {
+            if ((!$exception or !$exception instanceof ProjectionAlreadyRunning) && $this->repository) {
                 $this->repository->releaseLock();
             }
 
