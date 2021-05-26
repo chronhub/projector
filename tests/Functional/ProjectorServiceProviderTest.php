@@ -10,6 +10,7 @@ use Chronhub\Projector\Support\Facade\Project;
 use Chronhub\Projector\ProjectorServiceProvider;
 use Chronhub\Projector\Tests\TestCaseWithOrchestra;
 use Chronhub\Projector\Model\InMemoryProjectionProvider;
+use Chronhub\Projector\Support\Contracts\Factory\Option;
 use Chronhub\Projector\Support\Contracts\ServiceManager;
 use Chronhub\Chronicler\Factory\ChroniclerServiceProvider;
 use Chronhub\Projector\Support\Console\StopProjectionCommand;
@@ -29,7 +30,7 @@ use Chronhub\Projector\Support\Console\StreamPositionOfProjectionCommand;
 
 final class ProjectorServiceProviderTest extends TestCaseWithOrchestra
 {
-    protected function getPackageProviders($app)
+    protected function getPackageProviders($app): array
     {
         return [
             FoundationServiceProvider::class,
@@ -89,6 +90,9 @@ final class ProjectorServiceProviderTest extends TestCaseWithOrchestra
             ],
             'options'    => [
                 'default'   => [],
+                'lazy' => [
+                    Option::OPTION_UPDATE_LOCK_THRESHOLD => 5000,
+                ],
                 'in_memory' => InMemoryProjectorOption::class,
                 'snapshot'  => [],
             ],

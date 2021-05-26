@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Chronhub\Projector\Model;
 
-use Chronhub\Projector\Support\Contracts\Model\ProjectionModel;
-use Chronhub\Projector\Support\Contracts\Model\ProjectionProvider;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\QueryException;
+use Illuminate\Database\Eloquent\Builder;
+use Chronhub\Projector\Support\Contracts\Model\ProjectionModel;
+use Chronhub\Projector\Support\Contracts\Model\ProjectionProvider;
 
 final class Projection extends Model implements ProjectionProvider, ProjectionModel
 {
@@ -67,7 +67,7 @@ final class Projection extends Model implements ProjectionProvider, ProjectionMo
     {
         $result = $this->newQuery()->where('name', $name)->delete();
 
-        return 1 === (int)$result;
+        return 1 === (int) $result;
     }
 
     public function acquireLock(string $name, string $status, string $lockedUntil, string $now): bool
