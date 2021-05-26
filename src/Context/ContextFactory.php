@@ -18,7 +18,7 @@ final class ContextFactory
 {
     public Closure|null $initCallback = null;
     public Closure|array|null $eventHandlers = null;
-    public array $streamsNames = [];
+    public array $queries = [];
     public ?ProjectionQueryFilter $queryFilter = null;
     public null|Timer $timer = null;
 
@@ -57,27 +57,27 @@ final class ContextFactory
 
     public function fromStreams(string ...$streamNames): self
     {
-        $this->assertStreamsNamesNotSet();
+        $this->assertQueriesNotSet();
 
-        $this->streamsNames['names'] = $streamNames;
+        $this->queries['names'] = $streamNames;
 
         return $this;
     }
 
     public function fromCategories(string ...$categories): self
     {
-        $this->assertStreamsNamesNotSet();
+        $this->assertQueriesNotSet();
 
-        $this->streamsNames['categories'] = $categories;
+        $this->queries['categories'] = $categories;
 
         return $this;
     }
 
     public function fromAll(): self
     {
-        $this->assertStreamsNamesNotSet();
+        $this->assertQueriesNotSet();
 
-        $this->streamsNames['all'] = true;
+        $this->queries['all'] = true;
 
         return $this;
     }
@@ -109,9 +109,9 @@ final class ContextFactory
         return new ArrayEventHandler($this->eventHandlers);
     }
 
-    public function streamNames(): array
+    public function queries(): array
     {
-        return $this->streamsNames;
+        return $this->queries;
     }
 
     public function queryFilter(): ProjectionQueryFilter
@@ -126,7 +126,7 @@ final class ContextFactory
 
     public function validate(): void
     {
-        if (0 === count($this->streamsNames)) {
+        if (0 === count($this->queries)) {
             throw new RuntimeException('Projection streams all|names|categories not set');
         }
 
@@ -165,9 +165,9 @@ final class ContextFactory
         return [];
     }
 
-    private function assertStreamsNamesNotSet(): void
+    private function assertQueriesNotSet(): void
     {
-        if (count($this->streamsNames) > 0) {
+        if (count($this->queries) > 0) {
             throw new RuntimeException('Projection streams all|names|categories already set');
         }
     }

@@ -19,7 +19,7 @@ use Chronhub\Projector\Support\Contracts\ProjectionQueryFilter;
 use function is_array;
 
 /**
- * @method array                 streamNames()
+ * @method array                 queries()
  * @method callable              eventHandlers()
  * @method ProjectionQueryFilter queryFilter()
  * @method Timer                 timer()

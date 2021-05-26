@@ -34,7 +34,7 @@ final class ProjectionRepository implements Repository
 
         $this->acquireLock();
 
-        $this->context->streamPosition()->watch($this->context->streamNames());
+        $this->context->streamPosition()->watch($this->context->queries());
 
         $this->loadState();
     }

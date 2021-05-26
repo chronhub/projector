@@ -15,7 +15,7 @@ final class UpdateStatusAndPositions
     {
         $this->reloadRemoteStatus($context->runner()->inBackground());
 
-        $context->streamPosition()->watch($context->streamNames());
+        $context->streamPosition()->watch($context->queries());
 
         return $next($context);
     }

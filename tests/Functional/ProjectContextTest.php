@@ -4,28 +4,16 @@ declare(strict_types=1);
 
 namespace Chronhub\Projector\Tests\Functional;
 
-use Chronhub\Projector\DefaultManager;
-use Illuminate\Contracts\Foundation\Application;
+use Chronhub\Projector\Support\Facade\Project;
+use Chronhub\Projector\ProjectorServiceProvider;
 use Chronhub\Projector\Support\Contracts\Manager;
 use Chronhub\Projector\Exception\RuntimeException;
 use Chronhub\Projector\Tests\TestCaseWithOrchestra;
-use Chronhub\Chronicler\Support\Contracts\Chronicler;
-use Chronhub\Foundation\Support\Contracts\Clock\Clock;
-use Chronhub\Projector\Model\InMemoryProjectionProvider;
 use Chronhub\Chronicler\Factory\ChroniclerServiceProvider;
-use Chronhub\Chronicler\Driver\InMemory\InMemoryChronicler;
-use Chronhub\Chronicler\Driver\InMemory\InMemoryEventStream;
-use Chronhub\Projector\Support\Option\InMemoryProjectorOption;
-use Chronhub\Projector\Support\Contracts\Model\ProjectionProvider;
-use Chronhub\Projector\Support\Scope\InMemoryProjectionQueryScope;
-use Chronhub\Chronicler\Support\Contracts\Model\EventStreamProvider;
 use Chronhub\Foundation\Reporter\Services\FoundationServiceProvider;
 
-final class ProjectProjectionTest extends TestCaseWithOrchestra
+final class ProjectContextTest extends TestCaseWithOrchestra
 {
-    private Chronicler $chronicler;
-    private ProjectionProvider $projectionProvider;
-    private EventStreamProvider $eventStreamProvider;
     private Manager $projector;
 
     /**
@@ -53,7 +41,7 @@ final class ProjectProjectionTest extends TestCaseWithOrchestra
         $projection = $this->projector->createProjection('account');
         $projection
             ->fromStreams('customer')
-            ->whenAny(function (): void {})
+            ->whenAny(function (): void { })
             ->run(false);
     }
 
@@ -70,7 +58,7 @@ final class ProjectProjectionTest extends TestCaseWithOrchestra
             ->withQueryFilter($this->projector->queryScope()->fromIncludedPosition())
             ->withQueryFilter($this->projector->queryScope()->fromIncludedPosition())
             ->fromStreams('customer')
-            ->whenAny(function (): void {});
+            ->whenAny(function (): void { });
     }
 
     /**
@@ -83,7 +71,7 @@ final class ProjectProjectionTest extends TestCaseWithOrchestra
 
         $projection = $this->projector->createProjection('account');
         $projection
-            ->whenAny(function (): void {})
+            ->whenAny(function (): void { })
             ->run(false);
     }
 
@@ -126,7 +114,7 @@ final class ProjectProjectionTest extends TestCaseWithOrchestra
 
         $projection = $this->projector->createProjection('account');
         $projection
-            ->whenAny(function (): void {})
+            ->whenAny(function (): void { })
             ->when([]);
     }
 
@@ -141,42 +129,33 @@ final class ProjectProjectionTest extends TestCaseWithOrchestra
             ->until(1)
             ->withQueryFilter($this->projector->queryScope()->fromIncludedPosition())
             ->fromStreams('customer')
-            ->whenAny(function (): void {})
+            ->whenAny(function (): void { })
             ->run(true);
 
         $this->assertTrue(true);
     }
 
-    public function defineEnvironment($app): void
+    /**
+     * @test
+     */
+    public function it_raise_exception_when_timer_already_set(): void
     {
-        $this->setupChronicler($app);
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('Projection timer already set');
 
-        $this->projector = new DefaultManager(
-            $this->chronicler,
-            $this->eventStreamProvider,
-            $this->projectionProvider,
-            new InMemoryProjectionQueryScope(),
-            $app->get(Clock::class),
-            $app->make(InMemoryProjectorOption::class)
-        );
+        $projection = $this->projector->createProjection('account');
+
+        $projection
+            ->until(1)
+            ->until(5)
+            ->withQueryFilter($this->projector->queryScope()->fromIncludedPosition())
+            ->fromStreams('customer')
+            ->whenAny(function (): void { });
     }
 
-    private function setupChronicler(Application $app): void
+    public function defineEnvironment($app): void
     {
-        $projectionProvider = $app->make(InMemoryProjectionProvider::class);
-
-        $this->projectionProvider = $app->instance(
-            ProjectionProvider::class,
-            $projectionProvider
-        );
-
-        $eventStreamProvider = $app->make(InMemoryEventStream::class);
-        $this->eventStreamProvider = $app->instance(
-            EventStreamProvider::class,
-            $eventStreamProvider
-        );
-
-        $this->chronicler = new InMemoryChronicler($this->eventStreamProvider);
+        $this->projector = Project::create('in_memory');
     }
 
     protected function getPackageProviders($app): array
@@ -184,6 +163,7 @@ final class ProjectProjectionTest extends TestCaseWithOrchestra
         return [
             FoundationServiceProvider::class,
             ChroniclerServiceProvider::class,
+            ProjectorServiceProvider::class,
         ];
     }
 }

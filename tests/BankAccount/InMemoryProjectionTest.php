@@ -5,21 +5,19 @@ declare(strict_types=1);
 namespace Chronhub\Projector\Tests\BankAccount;
 
 use Chronhub\Projector\Status;
-use Chronhub\Projector\DefaultManager;
 use Chronhub\Chronicler\Stream\StreamName;
+use Chronhub\Projector\Support\Facade\Project;
 use Chronhub\Projector\Support\Contracts\Manager;
 use Chronhub\Foundation\Aggregate\AggregateChanged;
 use Chronhub\Projector\Tests\TestCaseWithOrchestra;
 use Chronhub\Projector\Context\ContextualProjection;
-use Chronhub\Foundation\Support\Contracts\Clock\Clock;
 use Chronhub\Projector\Model\InMemoryProjectionProvider;
-use Chronhub\Chronicler\Driver\InMemory\InMemoryEventStream;
-use Chronhub\Projector\Support\Option\InMemoryProjectorOption;
 use Chronhub\Projector\Support\Contracts\Model\ProjectionModel;
 use Chronhub\Projector\Support\Contracts\Model\ProjectionProvider;
-use Chronhub\Projector\Support\Scope\InMemoryProjectionQueryScope;
 use Chronhub\Chronicler\Support\BankAccount\Model\Account\DepositMade;
 use Chronhub\Chronicler\Support\BankAccount\Model\Account\WithdrawMade;
+use function json_decode;
+use function iterator_count;
 
 final class InMemoryProjectionTest extends TestCaseWithOrchestra
 {
@@ -143,15 +141,8 @@ final class InMemoryProjectionTest extends TestCaseWithOrchestra
         $inMemoryProjectionProvider = $this->app->make(InMemoryProjectionProvider::class);
 
         $this->projectionProvider = $this->app->instance(
-            ProjectionProvider::class, $inMemoryProjectionProvider);
+            InMemoryProjectionProvider::class, $inMemoryProjectionProvider);
 
-        $this->manager = new DefaultManager(
-            $this->chronicler,
-            $this->app->get(InMemoryEventStream::class),
-            $this->app->get(ProjectionProvider::class),
-            new InMemoryProjectionQueryScope(),
-            $this->app->get(Clock::class),
-            $this->app->make(InMemoryProjectorOption::class)
-        );
+        $this->manager = Project::create('in_memory');
     }
 }

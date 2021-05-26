@@ -18,11 +18,11 @@ class StreamPosition
         $this->container = new Collection();
     }
 
-    public function watch(array $streamNames): void
+    public function watch(array $queries): void
     {
         $container = new Collection();
 
-        foreach ($this->loadStreams($streamNames) as $stream) {
+        foreach ($this->loadStreamsFrom($queries) as $stream) {
             $container[$stream] = 0;
         }
 
@@ -69,12 +69,12 @@ class StreamPosition
     /**
      * @return string[]
      */
-    protected function loadStreams(array $streamNames): array
+    protected function loadStreamsFrom(array $queries): array
     {
-        return match (key($streamNames)) {
+        return match (key($queries)) {
             'all' => $this->eventStreamProvider->allStreamWithoutInternal(),
-            'categories' => $this->eventStreamProvider->filterByCategories($streamNames['categories']),
-            default => $this->handleStreamNames($streamNames['names'] ?? [])
+            'categories' => $this->eventStreamProvider->filterByCategories($queries['categories']),
+            default => $this->handleStreamNames($queries['names'] ?? [])
         };
     }
 

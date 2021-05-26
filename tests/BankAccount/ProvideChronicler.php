@@ -10,6 +10,7 @@ use Chronhub\Foundation\Reporter\ReportEvent;
 use Chronhub\Foundation\Reporter\ReportQuery;
 use Chronhub\Foundation\Reporter\ReportCommand;
 use Chronhub\Foundation\Support\Facade\Publish;
+use Chronhub\Projector\ProjectorServiceProvider;
 use Illuminate\Contracts\Foundation\Application;
 use Chronhub\Chronicler\Support\Contracts\Chronicler;
 use Chronhub\Foundation\Exception\MessageDispatchFailed;
@@ -55,6 +56,7 @@ trait ProvideChronicler
         return [
             FoundationServiceProvider::class,
             ChroniclerServiceProvider::class,
+            ProjectorServiceProvider::class,
         ];
     }
 

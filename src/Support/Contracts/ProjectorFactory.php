@@ -8,34 +8,50 @@ use Closure;
 
 interface ProjectorFactory extends Projector
 {
+    /**
+     * @return ProjectorFactory&static
+     */
     public function initialize(Closure $initCallback): ProjectorFactory;
 
     /**
-     * @param string ...$streams
-     *
      * @return ProjectorFactory&static
      */
     public function fromStreams(string ...$streams): ProjectorFactory;
 
     /**
-     * @param string ...$categories
+     * @return ProjectorFactory&static
      */
     public function fromCategories(string ...$categories): ProjectorFactory;
 
+    /**
+     * @return ProjectorFactory&static
+     */
     public function fromAll(): ProjectorFactory;
 
+    /**
+     * @return ProjectorFactory&static
+     */
     public function when(array $eventHandlers): ProjectorFactory;
 
+    /**
+     * @return ProjectorFactory&static
+     */
     public function whenAny(Closure $eventsHandler): ProjectorFactory;
 
     /**
      * Run the projection until time is reached
-     * time can be in second or a string interval
+     * delay can be in seconds or a string interval
      * to produce timestamp comparison.
      *
-     * @param int|string $delay
+     * note that projection should stop gracefully and
+     * could not exactly stopped at the delay requested
+     *
+     * @return ProjectorFactory&static
      */
     public function until(int|string $delay): ProjectorFactory;
 
+    /**
+     * @return ProjectorFactory&static
+     */
     public function withQueryFilter(ProjectionQueryFilter $queryFilter): ProjectorFactory;
 }

@@ -36,7 +36,7 @@ final class ReadModelRepository implements Repository
             $this->readModel->initialize();
         }
 
-        $this->context->streamPosition()->watch($this->context->streamNames());
+        $this->context->streamPosition()->watch($this->context->queries());
 
         $this->loadState();
     }

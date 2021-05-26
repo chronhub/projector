@@ -66,7 +66,7 @@ final class ProjectorServiceProviderTest extends TestCaseWithOrchestra
     {
         $config = $this->app[Repository::class]->get('projector');
 
-        $this->assertEquals($config, [
+        $this->assertEquals([
             'provider'   => [
                 'eloquent'  => Projection::class,
                 'in_memory' => InMemoryProjectionProvider::class,
@@ -117,6 +117,6 @@ final class ProjectorServiceProviderTest extends TestCaseWithOrchestra
                     ProjectMessageNameCommand::class,
                 ],
             ],
-        ]);
+        ], $config);
     }
 }

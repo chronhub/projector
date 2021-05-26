@@ -15,7 +15,7 @@ final class PrepareQueryRunner
         if ( ! $this->isInitiated) {
             $this->isInitiated = true;
 
-            $context->streamPosition()->watch($context->streamNames());
+            $context->streamPosition()->watch($context->queries());
         }
 
         return $next($context);
