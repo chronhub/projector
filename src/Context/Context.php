@@ -27,12 +27,7 @@ use function is_array;
 class Context
 {
     public ?string $currentStreamName = null;
-
-    /**
-     * Only for persistent projection no Read Model.
-     */
     private bool $isStreamCreated = false;
-
     private State $state;
     private Status $status;
     private RunnerController $runner;
