@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Chronhub\Projector\Model;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\QueryException;
-use Illuminate\Database\Eloquent\Builder;
 use Chronhub\Projector\Support\Contracts\Model\ProjectionModel;
 use Chronhub\Projector\Support\Contracts\Model\ProjectionProvider;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\QueryException;
 
 final class Projection extends Model implements ProjectionProvider, ProjectionModel
 {
@@ -32,9 +32,7 @@ final class Projection extends Model implements ProjectionProvider, ProjectionMo
 
     public function updateProjection(string $name, array $data): bool
     {
-        $result = $this->newInstance()->newQuery()
-            ->where('name', $name)
-            ->update($data);
+        $result = $this->newQuery()->where('name', $name)->update($data);
 
         return 1 === $result;
     }
@@ -42,9 +40,7 @@ final class Projection extends Model implements ProjectionProvider, ProjectionMo
     public function projectionExists(string $name): bool
     {
         try {
-            return $this->newInstance()->newQuery()
-                ->where('name', $name)
-                ->exists();
+            return $this->newQuery()->where('name', $name)->exists();
         } catch (QueryException) {
             return false;
         }
@@ -53,16 +49,14 @@ final class Projection extends Model implements ProjectionProvider, ProjectionMo
     public function findByName(string $name): ?ProjectionModel
     {
         /** @var ProjectionModel $projection */
-        $projection = $this->newInstance()->newQuery()
-            ->where('name', $name)
-            ->first();
+        $projection = $this->newQuery()->where('name', $name)->first();
 
         return $projection;
     }
 
     public function findByNames(string ...$names): array
     {
-        return $this->newInstance()->newQuery()
+        return $this->newQuery()
             ->whereIn('name', $names)
             ->orderBy('name')
             ->pluck('name')
@@ -71,16 +65,14 @@ final class Projection extends Model implements ProjectionProvider, ProjectionMo
 
     public function deleteProjectionByName(string $name): bool
     {
-        $result = (int) $this->newInstance()->newQuery()
-            ->where('name', $name)
-            ->delete();
+        $result = $this->newQuery()->where('name', $name)->delete();
 
-        return 1 === $result;
+        return 1 === (int)$result;
     }
 
     public function acquireLock(string $name, string $status, string $lockedUntil, string $now): bool
     {
-        $result = $this->newInstance()->newQuery()
+        $result = $this->newQuery()
             ->where('name', $name)
             ->where(static function (Builder $query) use ($now): void {
                 $query->whereRaw('locked_until IS NULL OR locked_until < ?', [$now]);

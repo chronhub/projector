@@ -19,6 +19,8 @@ interface ProjectionProvider
     public function projectionExists(string $name): bool;
 
     /**
+     * Return string projections names ordered by ascendant
+     *
      * @return string[]
      */
     public function findByNames(string ...$names): array;

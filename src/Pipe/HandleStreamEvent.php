@@ -14,7 +14,8 @@ use Chronhub\Chronicler\Support\Contracts\Chronicler;
 
 final class HandleStreamEvent
 {
-    public function __construct(private Chronicler $chronicler, private ?Repository $repository)
+    public function __construct(private Chronicler $chronicler,
+                                private ?Repository $repository)
     {
     }
 

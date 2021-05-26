@@ -9,6 +9,7 @@ use Chronhub\Foundation\Support\Contracts\Clock\Clock;
 use Chronhub\Projector\Exception\InvalidArgumentException;
 use Chronhub\Projector\Support\Contracts\Model\ProjectionModel;
 use Chronhub\Projector\Support\Contracts\Model\ProjectionProvider;
+use function array_keys;
 use function in_array;
 use function array_key_exists;
 
@@ -122,6 +123,9 @@ final class InMemoryProjectionProvider implements ProjectionProvider
             return true;
         }
 
-        return $this->clock->fromString($now)->after($this->clock->fromString($projection->lockedUntil()));
+        return $this->clock->fromString($now)
+            ->after(
+                $this->clock->fromString($projection->lockedUntil())
+            );
     }
 }

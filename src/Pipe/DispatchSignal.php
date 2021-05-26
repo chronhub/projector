@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Chronhub\Projector\Pipe;
 
 use Chronhub\Projector\Context\Context;
+use function pcntl_signal_dispatch;
 
 final class DispatchSignal
 {
