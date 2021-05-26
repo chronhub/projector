@@ -11,7 +11,7 @@ final class ProjectCategoryStreamCommand extends PersistentProjectionCommand
 {
     protected $signature = 'projector:category {--projector=default} {--signal=1}';
 
-    protected $description = 'Optimize queries by projecting events per categories';
+    protected $description = 'optimize queries by projecting events per categories';
 
     public function handle(): void
     {

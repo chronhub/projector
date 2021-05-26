@@ -12,15 +12,20 @@ use Chronhub\Projector\Tests\TestCaseWithOrchestra;
 use Chronhub\Projector\Model\InMemoryProjectionProvider;
 use Chronhub\Projector\Support\Contracts\ServiceManager;
 use Chronhub\Chronicler\Factory\ChroniclerServiceProvider;
-use Chronhub\Projector\Support\Console\ReadProjectionCommand;
-use Chronhub\Projector\Support\Console\WriteProjectionCommand;
+use Chronhub\Projector\Support\Console\StopProjectionCommand;
+use Chronhub\Projector\Support\Console\ResetProjectionCommand;
 use Chronhub\Projector\Support\Option\InMemoryProjectorOption;
+use Chronhub\Projector\Support\Console\DeleteProjectionCommand;
 use Chronhub\Projector\Support\Console\ProjectAllStreamCommand;
 use Chronhub\Projector\Support\Scope\PgsqlProjectionQueryScope;
+use Chronhub\Projector\Support\Console\StateOfProjectionCommand;
 use Chronhub\Projector\Support\Console\ProjectMessageNameCommand;
+use Chronhub\Projector\Support\Console\StatusOfProjectionCommand;
+use Chronhub\Projector\Support\Console\DeleteIncProjectionCommand;
 use Chronhub\Projector\Support\Scope\InMemoryProjectionQueryScope;
 use Chronhub\Foundation\Reporter\Services\FoundationServiceProvider;
 use Chronhub\Projector\Support\Console\ProjectCategoryStreamCommand;
+use Chronhub\Projector\Support\Console\StreamPositionOfProjectionCommand;
 
 final class ProjectorServiceProviderTest extends TestCaseWithOrchestra
 {
@@ -61,12 +66,12 @@ final class ProjectorServiceProviderTest extends TestCaseWithOrchestra
         $config = $this->app[Repository::class]->get('projector');
 
         $this->assertEquals($config, [
-            'provider' => [
-                'eloquent' => Projection::class,
+            'provider'   => [
+                'eloquent'  => Projection::class,
                 'in_memory' => InMemoryProjectionProvider::class,
             ],
             'projectors' => [
-                'default' => [
+                'default'   => [
                     'chronicler'                => 'pgsql',
                     'options'                   => 'lazy',
                     'provider'                  => 'eloquent',
@@ -83,16 +88,26 @@ final class ProjectorServiceProviderTest extends TestCaseWithOrchestra
                 ],
             ],
             'options'    => [
-                'default' => [],
+                'default'   => [],
                 'in_memory' => InMemoryProjectorOption::class,
-                'snapshot' => [],
+                'snapshot'  => [],
             ],
             'console'    => [
                 'load_migrations' => true,
-                'load_commands' => true,
-                'commands' => [
-                    ReadProjectionCommand::class,
-                    WriteProjectionCommand::class,
+                'load_commands'   => true,
+                'commands'        => [
+                    // write projection
+                    StopProjectionCommand::class,
+                    ResetProjectionCommand::class,
+                    DeleteProjectionCommand::class,
+                    DeleteIncProjectionCommand::class,
+
+                    // read projection
+                    StatusOfProjectionCommand::class,
+                    StreamPositionOfProjectionCommand::class,
+                    StateOfProjectionCommand::class,
+
+                    // projection to optimize queries
                     ProjectAllStreamCommand::class,
                     ProjectCategoryStreamCommand::class,
                     ProjectMessageNameCommand::class,

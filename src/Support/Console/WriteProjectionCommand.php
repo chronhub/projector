@@ -5,73 +5,46 @@ declare(strict_types=1);
 namespace Chronhub\Projector\Support\Console;
 
 use Illuminate\Console\Command;
+use Chronhub\Chronicler\Stream\StreamName;
 use Chronhub\Projector\Support\Facade\Project;
 use Chronhub\Projector\Support\Contracts\Manager;
 use Chronhub\Projector\Exception\ProjectionNotFound;
-use Chronhub\Projector\Exception\InvalidArgumentException;
 
-final class WriteProjectionCommand extends Command
+abstract class WriteProjectionCommand extends Command
 {
     protected const DEFAULT_PROJECTOR = 'default';
 
-    private const OPERATIONS_AVAILABLE = ['stop', 'reset', 'delete', 'deleteIncl'];
-
-    protected $signature = 'projector:write
-                                {op : operation on projection (available: stop reset delete deleteIncl)}
-                                {stream : stream name}
-                                {--projector=default}';
-
-    protected $description = 'Stop reset delete ( with/out emitted events ) one projection by stream name';
-
-    private ?Manager $projector;
-
     public function handle(): void
     {
-        [$streamName, $operation] = $this->determineArguments();
+        $streamName = new StreamName($this->argument('stream'));
 
-        $this->assertProjectionOperationExists($operation);
-
-        if ( ! $this->confirmOperation($streamName, $operation)) {
+        if ( ! $this->confirmOperation($streamName)) {
             return;
         }
 
-        $this->processProjection($streamName, $operation);
+        $this->processProjection($streamName);
 
-        $this->info("Operation $operation on stream $streamName successful");
+        $this->info("Operation {$this->operation()} on stream $streamName successful");
     }
 
-    private function processProjection(string $streamName, string $operation): void
-    {
-        switch ($operation) {
-            case 'stop':
-                $this->projector()->stop($streamName);
-                break;
-            case 'reset':
-                $this->projector()->reset($streamName);
-                break;
-            case 'delete':
-                $this->projector()->delete($streamName, false);
-                break;
-            case 'deleteIncl':
-                $this->projector()->delete($streamName, true);
-                break;
-        }
-    }
+    abstract protected function processProjection(StreamName $streamName): void;
 
-    private function confirmOperation(string $streamName, string $operation): bool
+    abstract protected function operation(): string;
+
+    private function confirmOperation(StreamName $streamName): bool
     {
         try {
-            $projectionStatus = $this->projector()->statusOf($streamName);
+            $projectionStatus = $this->projector()->statusOf($streamName->toString());
         } catch (ProjectionNotFound) {
-            $this->error("Projection not found with stream name $streamName ... operation aborted");
+            $this->error("Projection not found with stream $streamName");
 
             return false;
         }
 
         $this->warn("Status of $streamName projection is $projectionStatus");
 
-        if ( ! $this->confirm("Are you sure you want to $operation stream name $streamName")) {
-            $this->warn("Operation $operation on stream $streamName aborted");
+        if ( ! $this->confirm("Are you sure you want to {$this->operation()} stream $streamName")) {
+            $this->warn("Operation {$this->operation()} on stream $streamName aborted");
 
             return false;
         }
@@ -79,23 +52,11 @@ final class WriteProjectionCommand extends Command
         return true;
     }
 
-    private function determineArguments(): array
-    {
-        return [$this->argument('stream'), $this->argument('op')];
-    }
-
-    private function assertProjectionOperationExists(string $operation): void
-    {
-        if ( ! in_array($operation, self::OPERATIONS_AVAILABLE)) {
-            throw new InvalidArgumentException("Invalid operation $operation");
-        }
-    }
-
-    private function projector(): Manager
+    protected function projector(): Manager
     {
         $projectorId = $this->hasOption('projector')
             ? $this->option('projector') : self::DEFAULT_PROJECTOR;
 
-        return $this->projector ?? $this->projector = Project::create($projectorId);
+        return Project::create($projectorId);
     }
 }

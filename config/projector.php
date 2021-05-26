@@ -4,14 +4,19 @@ declare(strict_types=1);
 
 use Chronhub\Projector\Model\Projection;
 use Chronhub\Projector\Model\InMemoryProjectionProvider;
-use Chronhub\Projector\Support\Console\ReadProjectionCommand;
-use Chronhub\Projector\Support\Console\WriteProjectionCommand;
+use Chronhub\Projector\Support\Console\StopProjectionCommand;
+use Chronhub\Projector\Support\Console\ResetProjectionCommand;
 use Chronhub\Projector\Support\Option\InMemoryProjectorOption;
+use Chronhub\Projector\Support\Console\DeleteProjectionCommand;
 use Chronhub\Projector\Support\Console\ProjectAllStreamCommand;
 use Chronhub\Projector\Support\Scope\PgsqlProjectionQueryScope;
+use Chronhub\Projector\Support\Console\StateOfProjectionCommand;
 use Chronhub\Projector\Support\Console\ProjectMessageNameCommand;
+use Chronhub\Projector\Support\Console\StatusOfProjectionCommand;
+use Chronhub\Projector\Support\Console\DeleteIncProjectionCommand;
 use Chronhub\Projector\Support\Scope\InMemoryProjectionQueryScope;
 use Chronhub\Projector\Support\Console\ProjectCategoryStreamCommand;
+use Chronhub\Projector\Support\Console\StreamPositionOfProjectionCommand;
 
 return [
     /*
@@ -91,8 +96,18 @@ return [
         'load_commands' => true,
 
         'commands' => [
-            ReadProjectionCommand::class,
-            WriteProjectionCommand::class,
+            // write projection
+            StopProjectionCommand::class,
+            ResetProjectionCommand::class,
+            DeleteProjectionCommand::class,
+            DeleteIncProjectionCommand::class,
+
+            // read projection
+            StatusOfProjectionCommand::class,
+            StreamPositionOfProjectionCommand::class,
+            StateOfProjectionCommand::class,
+
+            // projection to optimize queries
             ProjectAllStreamCommand::class,
             ProjectCategoryStreamCommand::class,
             ProjectMessageNameCommand::class,
