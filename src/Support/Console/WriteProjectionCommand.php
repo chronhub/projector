@@ -24,12 +24,8 @@ abstract class WriteProjectionCommand extends Command
 
         $this->processProjection($streamName);
 
-        $this->info("Operation {$this->operation()} on stream $streamName successful");
+        $this->info("Operation {$this->operation()} on $streamName projection successful");
     }
-
-    abstract protected function processProjection(StreamName $streamName): void;
-
-    abstract protected function operation(): string;
 
     private function confirmOperation(StreamName $streamName): bool
     {
@@ -54,9 +50,13 @@ abstract class WriteProjectionCommand extends Command
 
     protected function projector(): Manager
     {
-        $projectorId = $this->hasOption('projector')
+        $projectorName = $this->hasOption('projector')
             ? $this->option('projector') : self::DEFAULT_PROJECTOR;
 
-        return Project::create($projectorId);
+        return Project::create($projectorName);
     }
+
+    abstract protected function processProjection(StreamName $streamName): void;
+
+    abstract protected function operation(): string;
 }

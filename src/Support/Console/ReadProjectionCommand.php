@@ -22,14 +22,10 @@ abstract class ReadProjectionCommand extends Command
 
         $result = empty($result) ? 'No result' : json_encode($result);
 
-        $this->info("{$this->field()} for stream $stream is: ");
+        $this->info("{$this->field()} $stream projection is: ");
 
         $this->info($result);
     }
-
-    abstract protected function processProjection(StreamName $streamName): array;
-
-    abstract protected function field(): string;
 
     protected function projector(): Manager
     {
@@ -38,4 +34,8 @@ abstract class ReadProjectionCommand extends Command
 
         return Project::create($projectorName);
     }
+
+    abstract protected function processProjection(StreamName $streamName): array;
+
+    abstract protected function field(): string;
 }

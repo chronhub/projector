@@ -10,6 +10,7 @@ use Chronhub\Projector\Support\Traits\InteractWithOption;
 final class InMemoryProjectorOption implements Option
 {
     use InteractWithOption;
+
     private bool $dispatchSignal = false;
     private int $streamCacheSize = 1000;
     private int $lockTimeoutMs = 0;
