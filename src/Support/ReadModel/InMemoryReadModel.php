@@ -10,11 +10,11 @@ final class InMemoryReadModel implements ReadModel
 {
     use InteractWithStack;
 
-    private ?array $data;
+    private ?array $container;
 
     public function initialize(): void
     {
-        $this->data = [];
+        $this->container = [];
     }
 
     public function isInitialized(): bool
@@ -24,26 +24,31 @@ final class InMemoryReadModel implements ReadModel
 
     public function reset(): void
     {
-        $this->data = [];
+        $this->container = [];
+    }
+
+    public function getContainer(): array
+    {
+        return $this->container;
     }
 
     public function down(): void
     {
-        $this->data = null;
+        $this->container = null;
     }
 
     protected function insert(string $id, array $data): void
     {
-        $this->data[$id] = $data;
+        $this->container[$id] = $data;
     }
 
     protected function update(string $id, string $field, mixed $value): void
     {
-        $this->data[$id][$field] = $value;
+        $this->container[$id][$field] = $value;
     }
 
     protected function delete(string $id): void
     {
-        unset($this->data[$id]);
+        unset($this->container[$id]);
     }
 }
