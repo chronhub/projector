@@ -15,11 +15,11 @@ class DefaultOption implements Option
         private bool $dispatchSignal = false,
         private int $streamCacheSize = 1000,
         private int $lockTimeoutMs = 1000,
-        private int $sleep = 10000,
+        private int $sleep = 100000,
         private int $persistBlockSize = 1000,
         private int $updateLockThreshold = 0,
         private array $retriesMs = [0, 5, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 2000, 3000],
-        private string $detectionWindows = 'PT60S')
+        private string $detectionWindows = 'PT1H')
     {
     }
 }
