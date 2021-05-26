@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Chronhub\Projector\Factory;
 
-use Chronhub\Projector\Context\Context;
 use Closure;
+use Chronhub\Projector\Context\Context;
 
 class Pipeline
 {
@@ -44,11 +44,11 @@ class Pipeline
 
     protected function prepareDestination(Closure $destination): Closure
     {
-        return fn(Context $passable) => $destination($passable);
+        return fn (Context $passable) => $destination($passable);
     }
 
     protected function carry(): Closure
     {
-        return fn(Closure $stack, callable $pipe) => fn(Context $passable) => $pipe($passable, $stack);
+        return fn (Closure $stack, callable $pipe) => fn (Context $passable) => $pipe($passable, $stack);
     }
 }

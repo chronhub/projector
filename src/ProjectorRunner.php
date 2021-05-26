@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Chronhub\Projector;
 
-use Chronhub\Projector\Exception\ProjectionAlreadyRunning;
 use Throwable;
 use Chronhub\Projector\Context\Context;
 use Chronhub\Projector\Factory\Pipeline;
 use Chronhub\Projector\Support\Contracts\Repository;
+use Chronhub\Projector\Exception\ProjectionAlreadyRunning;
 
 class ProjectorRunner
 {
@@ -29,12 +29,12 @@ class ProjectorRunner
             do {
                 $isStopped = $pipeline
                     ->send($context)
-                    ->then(fn(Context $context): bool => $context->runner()->isStopped());
-            } while ($context->runner()->inBackground() && !$isStopped);
+                    ->then(fn (Context $context): bool => $context->runner()->isStopped());
+            } while ($context->runner()->inBackground() && ! $isStopped);
         } catch (Throwable $e) {
             $exception = $e;
         } finally {
-            if ((!$exception or !$exception instanceof ProjectionAlreadyRunning) && $this->repository) {
+            if (( ! $exception or ! $exception instanceof ProjectionAlreadyRunning) && $this->repository) {
                 $this->repository->releaseLock();
             }
 
