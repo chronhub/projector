@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Chronhub\Projector\Tests;
+namespace Chronhub\Projector\Tests\Unit;
 
 use Chronhub\Projector\Status;
+use Chronhub\Projector\Tests\TestCase;
 
 final class StatusTest extends TestCase
 {
