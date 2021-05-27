@@ -10,6 +10,10 @@ $finder = PhpCsFixer\Finder::create()->in([
 return (new PhpCsFixer\Config)
     ->setRules([
         '@Symfony'                => true,
+        'native_function_invocation' => ['scope' => 'all'],
+        'global_namespace_import' =>[
+            'import_classes' => true, 'import_constants' => true, 'import_functions' => true
+        ],
         'concat_space'            => ['spacing' => 'one'],
         'declare_strict_types'    => true,
         'no_alias_functions'      => true,

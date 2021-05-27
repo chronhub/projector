@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Chronhub\Projector\Factory;
 
 use Chronhub\Projector\Exception\InvalidArgumentException;
+use function in_array;
+use function array_fill;
 
 class StreamCache
 {

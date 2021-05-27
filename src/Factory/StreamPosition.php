@@ -8,6 +8,7 @@ use Illuminate\Support\Collection;
 use Chronhub\Projector\Exception\InvalidArgumentException;
 use Chronhub\Chronicler\Support\Contracts\Model\EventStreamProvider;
 use function key;
+use function count;
 
 class StreamPosition
 {

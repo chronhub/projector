@@ -7,6 +7,7 @@ namespace Chronhub\Projector\Factory;
 use Iterator;
 use Countable;
 use Chronhub\Projector\Support\Traits\HasTimSort;
+use function count;
 
 class MergeStreamIterator implements Iterator, Countable
 {

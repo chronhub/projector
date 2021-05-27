@@ -15,6 +15,8 @@ use Chronhub\Projector\Exception\InvalidArgumentException;
 use Chronhub\Projector\Support\Contracts\Model\ProjectionProvider;
 use Chronhub\Chronicler\Support\Contracts\Factory\ChroniclerManager;
 use Chronhub\Chronicler\Support\Contracts\Model\EventStreamProvider;
+use function is_array;
+use function is_string;
 
 final class DefaultServiceManager implements ServiceManager
 {

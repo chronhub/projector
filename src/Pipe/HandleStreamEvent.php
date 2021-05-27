@@ -11,6 +11,8 @@ use Chronhub\Projector\Factory\MergeStreamIterator;
 use Chronhub\Projector\Factory\StreamEventIterator;
 use Chronhub\Projector\Support\Contracts\Repository;
 use Chronhub\Chronicler\Support\Contracts\Chronicler;
+use function array_keys;
+use function array_values;
 
 final class HandleStreamEvent
 {

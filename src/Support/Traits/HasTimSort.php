@@ -9,6 +9,7 @@ use DateTimeImmutable;
 use Chronhub\Foundation\Message\DomainEvent;
 use Chronhub\Foundation\Clock\UniversalPointInTime;
 use Chronhub\Foundation\Support\Contracts\Message\Header;
+use function min;
 
 /**
  * @see https://github.com/prooph/event-store/blob/7.x/src/StreamIterator/TimSort.php

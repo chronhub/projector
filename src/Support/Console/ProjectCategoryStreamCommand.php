@@ -6,6 +6,8 @@ namespace Chronhub\Projector\Support\Console;
 
 use Closure;
 use Chronhub\Foundation\Aggregate\AggregateChanged;
+use function strpos;
+use function substr;
 
 final class ProjectCategoryStreamCommand extends PersistentProjectionCommand
 {

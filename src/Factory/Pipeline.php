@@ -6,6 +6,8 @@ namespace Chronhub\Projector\Factory;
 
 use Closure;
 use Chronhub\Projector\Context\Context;
+use function array_reduce;
+use function array_reverse;
 
 class Pipeline
 {

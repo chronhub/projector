@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Chronhub\Projector\Factory;
 
 use Chronhub\Projector\Support\Contracts\Factory\State;
+use function count;
 use function json_encode;
 
 final class InMemoryState implements State

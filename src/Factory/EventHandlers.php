@@ -9,6 +9,8 @@ use Chronhub\Projector\Context\Context;
 use Chronhub\Foundation\Message\DomainEvent;
 use Chronhub\Projector\Support\Contracts\Repository;
 use Chronhub\Foundation\Support\Contracts\Message\Header;
+use function in_array;
+use function pcntl_signal_dispatch;
 
 abstract class EventHandlers
 {

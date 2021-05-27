@@ -10,6 +10,8 @@ use Chronhub\Projector\Support\Contracts\ProjectorFactory;
 use Chronhub\Projector\Support\Contracts\Support\ReadModel;
 use Chronhub\Projector\Support\Contracts\ProjectionQueryFilter;
 use Symfony\Component\Console\Command\SignalableCommandInterface;
+use function is_string;
+use function pcntl_async_signals;
 
 abstract class PersistentProjectionCommand extends Command implements SignalableCommandInterface
 {

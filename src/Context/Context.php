@@ -17,6 +17,7 @@ use Chronhub\Projector\Support\Contracts\Factory\Timer;
 use Chronhub\Projector\Support\Contracts\Factory\Option;
 use Chronhub\Projector\Support\Contracts\ProjectionQueryFilter;
 use function is_array;
+use function call_user_func_array;
 
 /**
  * @method array                 queries()
