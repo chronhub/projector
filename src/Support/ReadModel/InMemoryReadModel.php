@@ -11,11 +11,10 @@ final class InMemoryReadModel implements ReadModel
 {
     use InteractWithStack;
 
-    private ?array $container;
+    private array $container = [];
 
     public function initialize(): void
     {
-        $this->container = [];
     }
 
     public function isInitialized(): bool
@@ -30,7 +29,7 @@ final class InMemoryReadModel implements ReadModel
 
     public function down(): void
     {
-        $this->container = null;
+        $this->container = [];
     }
 
     public function getContainer(): array
