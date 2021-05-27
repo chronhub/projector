@@ -19,11 +19,6 @@ class InMemoryProjectionQueryScope extends InMemoryQueryScope implements Project
         return new class() implements ProjectionQueryFilter, InMemoryQueryFilter {
             private int $currentPosition = 0;
 
-            public function setCurrentPosition(int $position): void
-            {
-                $this->currentPosition = $position;
-            }
-
             public function filterQuery(): callable
             {
                 $position = $this->currentPosition;
@@ -37,6 +32,11 @@ class InMemoryProjectionQueryScope extends InMemoryQueryScope implements Project
 
                     return $isGreaterThanPosition ? $event : null;
                 };
+            }
+
+            public function setCurrentPosition(int $position): void
+            {
+                $this->currentPosition = $position;
             }
 
             public function orderBy(): string

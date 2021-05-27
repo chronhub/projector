@@ -34,7 +34,7 @@ class ProjectorRunner
         } catch (Throwable $e) {
             $exception = $e;
         } finally {
-            if (( null === $exception or ! $exception instanceof ProjectionAlreadyRunning) && $this->repository) {
+            if ((null === $exception or ! $exception instanceof ProjectionAlreadyRunning) && $this->repository) {
                 $this->repository->releaseLock();
             }
 

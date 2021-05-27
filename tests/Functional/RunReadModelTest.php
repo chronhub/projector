@@ -146,10 +146,10 @@ final class RunReadModelTest extends TestCaseWithOrchestra
                         ]);
                     } else {
                         $this->readModel()->stack(
-                            'update',
+                            'increment',
                             $event->aggregateId(),
                             'balance',
-                            $event->oldBalance()->available() + $event->deposit()
+                            $event->deposit()
                         );
                     }
 

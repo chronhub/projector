@@ -19,7 +19,7 @@ final class HandleTimer
 
         $process = $next($context);
 
-        if (!$context->runner()->isStopped() && $context->timer()->isExpired()) {
+        if ( ! $context->runner()->isStopped() && $context->timer()->isExpired()) {
             $this->projector->stop();
         }
 
