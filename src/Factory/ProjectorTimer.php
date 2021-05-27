@@ -38,11 +38,9 @@ final class ProjectorTimer implements Timer
 
     private function determineTimer(DateTimeImmutable $datetime): int
     {
-        if (is_int($this->timer)) {
-            return $datetime->getTimestamp() + $this->timer;
-        }
+        $interval = is_int($this->timer) ? 'PT' . $this->timer . 'S' : $this->timer;
 
-        return $datetime->add(new DateInterval($this->timer))->getTimestamp();
+        return $datetime->add(new DateInterval($interval))->getTimestamp();
     }
 
     private function now(): DateTimeImmutable
