@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace Chronhub\Projector\Pipe;
 
-use Closure;
-use Chronhub\Projector\Context\Context;
 use Chronhub\Chronicler\Stream\StreamName;
+use Chronhub\Chronicler\Support\Contracts\Chronicler;
+use Chronhub\Projector\Context\Context;
 use Chronhub\Projector\Factory\MergeStreamIterator;
 use Chronhub\Projector\Factory\StreamEventIterator;
+use Chronhub\Projector\Support\Contracts\ProjectionQueryFilter;
 use Chronhub\Projector\Support\Contracts\Repository;
-use Chronhub\Chronicler\Support\Contracts\Chronicler;
+use Closure;
 use function array_keys;
 use function array_values;
 
@@ -32,7 +33,7 @@ final class HandleStreamEvent
 
             $eventHandled = $eventHandlers($context, $event, $eventPosition, $this->repository);
 
-            if ( ! $eventHandled || $context->runner()->isStopped()) {
+            if (!$eventHandled || $context->runner()->isStopped()) {
                 return $next($context);
             }
         }
@@ -46,7 +47,9 @@ final class HandleStreamEvent
         $queryFilter = $context->queryFilter();
 
         foreach ($context->streamPosition()->all() as $streamName => $position) {
-            $queryFilter->setCurrentPosition($position + 1);
+            if ($queryFilter instanceof ProjectionQueryFilter) {
+                $queryFilter->setCurrentPosition($position + 1);
+            }
 
             $events = $this->chronicler->retrieveFiltered(
                 new StreamName($streamName), $queryFilter

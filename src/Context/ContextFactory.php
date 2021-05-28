@@ -11,7 +11,7 @@ use Chronhub\Projector\Factory\ArrayEventHandler;
 use Chronhub\Projector\Exception\RuntimeException;
 use Chronhub\Projector\Factory\ClosureEventHandler;
 use Chronhub\Projector\Support\Contracts\Factory\Timer;
-use Chronhub\Projector\Support\Contracts\ProjectionQueryFilter;
+use Chronhub\Chronicler\Support\Contracts\Query\QueryFilter;
 use function count;
 
 final class ContextFactory
@@ -19,7 +19,7 @@ final class ContextFactory
     public Closure|null $initCallback = null;
     public Closure|array|null $eventHandlers = null;
     public array $queries = [];
-    public ?ProjectionQueryFilter $queryFilter = null;
+    public ?QueryFilter $queryFilter = null;
     public null|Timer $timer = null;
 
     public function initialize(Closure $initCallback): self
@@ -33,7 +33,7 @@ final class ContextFactory
         return $this;
     }
 
-    public function withQueryFilter(ProjectionQueryFilter $queryFilter): self
+    public function withQueryFilter(QueryFilter $queryFilter): self
     {
         if (null !== $this->queryFilter) {
             throw new RuntimeException('Projection query filter already set');
@@ -114,7 +114,7 @@ final class ContextFactory
         return $this->queries;
     }
 
-    public function queryFilter(): ProjectionQueryFilter
+    public function queryFilter(): QueryFilter
     {
         return $this->queryFilter;
     }

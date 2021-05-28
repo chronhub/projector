@@ -15,15 +15,15 @@ use Chronhub\Foundation\Support\Contracts\Clock\Clock;
 use Chronhub\Projector\Support\Contracts\Factory\State;
 use Chronhub\Projector\Support\Contracts\Factory\Timer;
 use Chronhub\Projector\Support\Contracts\Factory\Option;
-use Chronhub\Projector\Support\Contracts\ProjectionQueryFilter;
+use Chronhub\Chronicler\Support\Contracts\Query\QueryFilter;
 use function is_array;
 use function call_user_func_array;
 
 /**
- * @method array                 queries()
- * @method callable              eventHandlers()
- * @method ProjectionQueryFilter queryFilter()
- * @method Timer                 timer()
+ * @method array       queries()
+ * @method callable    eventHandlers()
+ * @method QueryFilter queryFilter()
+ * @method Timer       timer()
  */
 class Context
 {

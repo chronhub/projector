@@ -8,7 +8,7 @@ use Closure;
 use Chronhub\Projector\Context\Context;
 use Chronhub\Projector\Context\ContextFactory;
 use Chronhub\Projector\Support\Contracts\ProjectorFactory;
-use Chronhub\Projector\Support\Contracts\ProjectionQueryFilter;
+use Chronhub\Chronicler\Support\Contracts\Query\QueryFilter;
 
 trait InteractWithContext
 {
@@ -88,7 +88,7 @@ trait InteractWithContext
     /**
      * @return ProjectorFactory&static
      */
-    public function withQueryFilter(ProjectionQueryFilter $queryFilter): ProjectorFactory
+    public function withQueryFilter(QueryFilter $queryFilter): ProjectorFactory
     {
         $this->factory->withQueryFilter($queryFilter);
 

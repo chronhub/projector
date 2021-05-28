@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Chronhub\Projector\Support\Contracts;
 
 use Closure;
+use Chronhub\Chronicler\Support\Contracts\Query\QueryFilter;
 
 interface ProjectorFactory extends Projector
 {
@@ -53,5 +54,5 @@ interface ProjectorFactory extends Projector
     /**
      * @return ProjectorFactory&static
      */
-    public function withQueryFilter(ProjectionQueryFilter $queryFilter): ProjectorFactory;
+    public function withQueryFilter(QueryFilter $queryFilter): ProjectorFactory;
 }
