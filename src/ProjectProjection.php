@@ -56,7 +56,11 @@ final class ProjectProjection implements ProjectorFactory, ProjectionProjector
 
     protected function contextualEventHandler(): ContextualProjection
     {
-        return new ContextualProjection($this, $this->context->currentStreamName);
+        return new ContextualProjection(
+            $this,
+            $this->context->clock(),
+            $this->context->currentStreamName
+        );
     }
 
     private function persistIfStreamIsFirstCommit(StreamName $streamName): void

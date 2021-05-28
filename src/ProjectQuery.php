@@ -54,7 +54,11 @@ final class ProjectQuery implements QueryProjector, ProjectorFactory
 
     protected function contextualEventHandler(): ContextualQuery
     {
-        return new ContextualQuery($this, $this->context->currentStreamName);
+        return new ContextualQuery(
+            $this,
+            $this->context->clock(),
+            $this->context->currentStreamName
+        );
     }
 
     private function pipes(): array

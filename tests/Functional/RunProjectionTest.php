@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Chronhub\Projector\Tests\Functional;
 
+use Chronhub\Foundation\Support\Contracts\Clock\Clock;
 use Ramsey\Uuid\Uuid;
 use Chronhub\Chronicler\Stream\Stream;
 use Chronhub\Chronicler\Stream\StreamName;
@@ -39,11 +40,23 @@ final class RunProjectionTest extends TestCaseWithOrchestra
      */
     public function it_run_projection_once(): void
     {
+        $test = $this;
+
+        $this->feedEventStore(1);
+
         $projection = $this->projector->createProjection('deposits');
         $projection
             ->withQueryFilter($this->projector->queryScope()->fromIncludedPosition())
             ->fromStreams('account_stream')
-            ->whenAny(function (AggregateChanged $event, array $state): void { })
+            ->whenAny(function (AggregateChanged $event, array $state)use($test): void {
+                /** @var ContextualProjection $this */
+
+                $test->assertInstanceOf(DepositMade::class, $event);
+                $test->assertEquals([], $state);
+
+                $test->assertInstanceOf(Clock::class, $this->clock());
+                $test->assertEquals('account_stream', $this->streamName());
+            })
             ->run(false);
 
         $this->assertEquals([], $projection->getState());
@@ -173,13 +186,12 @@ final class RunProjectionTest extends TestCaseWithOrchestra
         $this->assertEquals(['events' => 5, 'deposits' => 500], $projection->getState());
     }
 
-    private function feedEventStore(): void
+    private function feedEventStore(int $limit = 10): void
     {
         $this->chronicler->persistFirstCommit(
             new Stream(new StreamName('account_stream'))
         );
 
-        $i = 10;
         $version = 0;
         /** @var AggregateId|AccountId $accountId */
         $accountId = AccountId::create();
@@ -187,7 +199,7 @@ final class RunProjectionTest extends TestCaseWithOrchestra
         $customerId = CustomerId::create();
         $balance = 0;
 
-        while (0 !== $i) {
+        while (0 !== $limit) {
             ++$version;
 
             $headers = [
@@ -209,7 +221,7 @@ final class RunProjectionTest extends TestCaseWithOrchestra
                 ])
             );
 
-            --$i;
+            --$limit;
         }
     }
 

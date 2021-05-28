@@ -38,6 +38,10 @@ final class ProjectReadModel implements ProjectorFactory, ReadModelProjector
 
     protected function contextualEventHandler(): ContextualReadModel
     {
-        return new ContextualReadModel($this, $this->context->currentStreamName);
+        return new ContextualReadModel(
+            $this,
+            $this->context->clock(),
+            $this->context->currentStreamName
+        );
     }
 }

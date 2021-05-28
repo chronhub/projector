@@ -105,13 +105,9 @@ final class ProjectorServiceProviderTest extends TestCaseWithOrchestra
                     ResetProjectionCommand::class,
                     DeleteProjectionCommand::class,
                     DeleteIncProjectionCommand::class,
-
-                    // read projection
                     StatusOfProjectionCommand::class,
                     StreamPositionOfProjectionCommand::class,
                     StateOfProjectionCommand::class,
-
-                    // projection to optimize queries
                     ProjectAllStreamCommand::class,
                     ProjectCategoryStreamCommand::class,
                     ProjectMessageNameCommand::class,
