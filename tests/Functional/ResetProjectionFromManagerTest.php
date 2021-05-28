@@ -92,8 +92,6 @@ final class ResetProjectionFromManagerTest extends TestCaseWithOrchestra
      */
     public function it_reset_projection_linking_event_to_new_stream(): void
     {
-        $this->markAsRisky();
-
         // setup events
         $accountStreamName = new StreamName('account');
         $depositStreamName = new StreamName('deposit');
@@ -153,8 +151,6 @@ final class ResetProjectionFromManagerTest extends TestCaseWithOrchestra
         $this->assertEquals(Status::IDLE, $projector->statusOf('deposit'));
         $this->assertEmpty($projector->streamPositionsOf('deposit'));
 
-        // Rerunning deposit projection should reset the deposit events stream
-        // but a in memory projection still hold the stream positions and stream created property
         $this->reRunProjection($depositProjection);
 
         $this->assertEquals(['count' => 10], $projector->stateOf('deposit'));
@@ -162,9 +158,7 @@ final class ResetProjectionFromManagerTest extends TestCaseWithOrchestra
         $this->assertEquals(['account' => 10], $projector->streamPositionsOf('deposit'));
 
         $this->assertTrue(Chronicle::create('in_memory')->hasStream($accountStreamName));
-
-        // it actually false
-        // $this->assertTrue(Chronicle::create('in_memory')->hasStream($depositStreamName));
+        $this->assertFalse(Chronicle::create('in_memory')->hasStream($depositStreamName));
     }
 
     /**
@@ -190,7 +184,7 @@ final class ResetProjectionFromManagerTest extends TestCaseWithOrchestra
                 $projection->run(false);
             } catch (ProjectionAlreadyRunning $e) {
                 $exception = $e;
-                usleep(5000);
+                usleep(1000);
             }
         } while (null !== $exception);
     }

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Chronhub\Projector\Tests\Functional;
 
-use Chronhub\Foundation\Support\Contracts\Clock\Clock;
 use Ramsey\Uuid\Uuid;
 use Chronhub\Chronicler\Stream\Stream;
 use Chronhub\Chronicler\Stream\StreamName;
@@ -20,6 +19,7 @@ use Chronhub\Projector\Tests\TestCaseWithOrchestra;
 use Chronhub\Projector\Context\ContextualProjection;
 use Chronhub\Chronicler\Support\Contracts\Chronicler;
 use Chronhub\Foundation\Aggregate\GenericAggregateId;
+use Chronhub\Foundation\Support\Contracts\Clock\Clock;
 use Chronhub\Projector\Model\InMemoryProjectionProvider;
 use Chronhub\Foundation\Support\Contracts\Message\Header;
 use Chronhub\Chronicler\Factory\ChroniclerServiceProvider;
@@ -48,8 +48,8 @@ final class RunProjectionTest extends TestCaseWithOrchestra
         $projection
             ->withQueryFilter($this->projector->queryScope()->fromIncludedPosition())
             ->fromStreams('account_stream')
-            ->whenAny(function (AggregateChanged $event, array $state)use($test): void {
-                /** @var ContextualProjection $this */
+            ->whenAny(function (AggregateChanged $event, array $state) use ($test): void {
+                /* @var ContextualProjection $this */
 
                 $test->assertInstanceOf(DepositMade::class, $event);
                 $test->assertEquals([], $state);
