@@ -148,6 +148,25 @@ final class StreamPositionTest extends TestCaseWithProphecy
     /**
      * @test
      */
+    public function it_check_if_next_position_match_current_event_position(): void
+    {
+        $provider = $this->prophesize(EventStreamProvider::class)->reveal();
+
+        $streamPosition = new StreamPosition($provider);
+
+        $streamPosition->watch(['names' => ['account', 'customer']]);
+
+        $streamPosition->discover(['account' => 25, 'customer' => 20]);
+
+        $this->assertTrue($streamPosition->hasNextPosition('account', 26));
+        $this->assertFalse($streamPosition->hasNextPosition('account', 27));
+        $this->assertTrue($streamPosition->hasNextPosition('customer', 21));
+        $this->assertFalse($streamPosition->hasNextPosition('customer', 22));
+    }
+
+    /**
+     * @test
+     */
     public function it_reset_stream_positions(): void
     {
         $provider = $this->prophesize(EventStreamProvider::class)->reveal();
