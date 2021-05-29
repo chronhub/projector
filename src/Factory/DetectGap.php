@@ -31,7 +31,7 @@ class DetectGap
             return false;
         }
 
-        $gapDetected = $this->gapDetected = array_key_exists($this->retries, $this->retriesInMs);
+        $gapDetected = array_key_exists($this->retries, $this->retriesInMs);
 
         if ( ! $gapDetected) {
             return $this->gapDetected = false;
