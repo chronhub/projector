@@ -4,22 +4,22 @@ declare(strict_types=1);
 
 namespace Chronhub\Projector\Context;
 
-use Chronhub\Chronicler\Support\Contracts\Query\QueryFilter;
-use Chronhub\Foundation\Support\Contracts\Clock\Clock;
-use Chronhub\Projector\Exception\RuntimeException;
+use Closure;
+use Chronhub\Projector\Status;
+use Chronhub\Projector\RunnerController;
 use Chronhub\Projector\Factory\DetectGap;
 use Chronhub\Projector\Factory\EventCounter;
 use Chronhub\Projector\Factory\InMemoryState;
 use Chronhub\Projector\Factory\StreamPosition;
-use Chronhub\Projector\RunnerController;
-use Chronhub\Projector\Status;
-use Chronhub\Projector\Support\Contracts\Factory\Option;
+use Chronhub\Projector\Exception\RuntimeException;
+use Chronhub\Foundation\Support\Contracts\Clock\Clock;
 use Chronhub\Projector\Support\Contracts\Factory\State;
 use Chronhub\Projector\Support\Contracts\Factory\Timer;
+use Chronhub\Projector\Support\Contracts\Factory\Option;
+use Chronhub\Chronicler\Support\Contracts\Query\QueryFilter;
 use Chronhub\Projector\Support\Contracts\ProjectionQueryFilter;
-use Closure;
-use function call_user_func_array;
 use function is_array;
+use function call_user_func_array;
 
 /**
  * @method array       queries()
