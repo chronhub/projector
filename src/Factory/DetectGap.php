@@ -33,7 +33,7 @@ class DetectGap
             return false;
         }
 
-        if ($this->streamPosition->has($streamName, $eventPosition + 1)) {
+        if ($this->streamPosition->hasNextPosition($streamName, $eventPosition)) {
             return false;
         }
 

@@ -45,9 +45,9 @@ class StreamPosition
         $this->container = new Collection();
     }
 
-    public function has(string $streamName, int $position): bool
+    public function hasNextPosition(string $streamName, int $position): bool
     {
-        return $this->container[$streamName] === $position;
+        return $this->container[$streamName] + 1 === $position;
     }
 
     /**

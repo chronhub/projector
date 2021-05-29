@@ -166,23 +166,6 @@ final class StreamPositionTest extends TestCaseWithProphecy
     /**
      * @test
      */
-    public function it_check_if_stream_exists_at_position(): void
-    {
-        $provider = $this->prophesize(EventStreamProvider::class)->reveal();
-
-        $streamPosition = new StreamPosition($provider);
-
-        $streamPosition->watch(['names' => ['account', 'customer']]);
-
-        $this->assertTrue($streamPosition->has('account', 0));
-        $this->assertFalse($streamPosition->has('account', 10));
-        $this->assertTrue($streamPosition->has('customer', 0));
-        $this->assertFalse($streamPosition->has('customer', 5));
-    }
-
-    /**
-     * @test
-     */
     public function it_convert_to_json(): void
     {
         $provider = $this->prophesize(EventStreamProvider::class)->reveal();

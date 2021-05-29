@@ -51,7 +51,7 @@ final class DetectGapTest extends TestCaseWithProphecy
 
         $this->clock->fromNow()->shouldNotBeCalled();
 
-        $this->streamPosition->has(Argument::type('string'), Argument::type('integer'))->shouldNotBeCalled();
+        $this->streamPosition->hasNextPosition(Argument::type('string'), Argument::type('integer'))->shouldNotBeCalled();
 
         $gapDetector = new DetectGap(
             $this->streamPosition->reveal(),
@@ -75,7 +75,7 @@ final class DetectGapTest extends TestCaseWithProphecy
 
         $eventTime = $time->sub('PT60S')->toString();
 
-        $this->streamPosition->has(Argument::type('string'), Argument::type('integer'))->shouldNotBeCalled();
+        $this->streamPosition->hasNextPosition(Argument::type('string'), Argument::type('integer'))->shouldNotBeCalled();
 
         $gapDetector = new DetectGap(
             $this->streamPosition->reveal(),
@@ -97,7 +97,7 @@ final class DetectGapTest extends TestCaseWithProphecy
         $time = UniversalPointInTime::now();
         $eventTime = $time->sub('PT1S')->toString();
 
-        $this->streamPosition->has('customer', 3)->willReturn(true)->shouldBeCalled();
+        $this->streamPosition->hasNextPosition('customer', 3)->willReturn(true)->shouldBeCalled();
 
         $gapDetector = new DetectGap(
             $this->streamPosition->reveal(),
@@ -106,7 +106,7 @@ final class DetectGapTest extends TestCaseWithProphecy
             'PT60S'
         );
 
-        $this->assertFalse($gapDetector->detect('customer', 2, $eventTime));
+        $this->assertFalse($gapDetector->detect('customer', 3, $eventTime));
         $this->assertFalse($gapDetector->hasGap());
     }
 
@@ -119,7 +119,7 @@ final class DetectGapTest extends TestCaseWithProphecy
         $time = UniversalPointInTime::now();
         $eventTime = $time->sub('PT1S')->toString();
 
-        $this->streamPosition->has('customer', 3)->willReturn(false)->shouldBeCalled();
+        $this->streamPosition->hasNextPosition('customer', 2)->willReturn(false)->shouldBeCalled();
 
         $gapDetector = new DetectGap(
             $this->streamPosition->reveal(),
@@ -179,7 +179,7 @@ final class DetectGapTest extends TestCaseWithProphecy
         $time = UniversalPointInTime::now();
         $eventTime = $time->sub('PT1S')->toString();
 
-        $this->streamPosition->has('customer', 3)->willReturn(false)->shouldBeCalled();
+        $this->streamPosition->hasNextPosition('customer', 3)->willReturn(false)->shouldBeCalled();
 
         $gapDetector = new DetectGap(
             $this->streamPosition->reveal(),
@@ -188,7 +188,7 @@ final class DetectGapTest extends TestCaseWithProphecy
             'PT60S'
         );
 
-        $this->assertTrue($gapDetector->detect('customer', 2, $eventTime));
+        $this->assertTrue($gapDetector->detect('customer', 3, $eventTime));
         $this->assertTrue($gapDetector->hasGap());
     }
 
