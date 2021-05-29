@@ -4,20 +4,22 @@ declare(strict_types=1);
 
 namespace Chronhub\Projector\Context;
 
-use Closure;
-use Chronhub\Projector\Status;
-use Chronhub\Projector\RunnerController;
+use Chronhub\Chronicler\Support\Contracts\Query\QueryFilter;
+use Chronhub\Foundation\Support\Contracts\Clock\Clock;
+use Chronhub\Projector\Exception\RuntimeException;
 use Chronhub\Projector\Factory\DetectGap;
 use Chronhub\Projector\Factory\EventCounter;
 use Chronhub\Projector\Factory\InMemoryState;
 use Chronhub\Projector\Factory\StreamPosition;
-use Chronhub\Foundation\Support\Contracts\Clock\Clock;
+use Chronhub\Projector\RunnerController;
+use Chronhub\Projector\Status;
+use Chronhub\Projector\Support\Contracts\Factory\Option;
 use Chronhub\Projector\Support\Contracts\Factory\State;
 use Chronhub\Projector\Support\Contracts\Factory\Timer;
-use Chronhub\Projector\Support\Contracts\Factory\Option;
-use Chronhub\Chronicler\Support\Contracts\Query\QueryFilter;
-use function is_array;
+use Chronhub\Projector\Support\Contracts\ProjectionQueryFilter;
+use Closure;
 use function call_user_func_array;
+use function is_array;
 
 /**
  * @method array       queries()
@@ -33,16 +35,18 @@ class Context
     private Status $status;
     private RunnerController $runner;
     private ContextFactory $factory;
+    private bool $isPersistent;
 
     public function __construct(private Option $option,
                                 private Clock $clock,
                                 private StreamPosition $streamPosition,
-                                private ?EventCounter $eventCounter,
-                                private ?DetectGap $gap)
+                                private ?EventCounter $eventCounter = null,
+                                private ?DetectGap $gap = null)
     {
         $this->state = new InMemoryState();
         $this->status = Status::IDLE();
         $this->runner = new RunnerController();
+        $this->isPersistent = $eventCounter instanceof EventCounter;
     }
 
     public function cast(object $contextualHandler): void
@@ -74,6 +78,10 @@ class Context
         $factory->validate();
 
         $this->factory = $factory;
+
+        if ($this->isPersistent && ! $this->factory->queryFilter() instanceof ProjectionQueryFilter) {
+            throw new RuntimeException('Persistent projector require a projection query filter');
+        }
     }
 
     public function runner(): RunnerController

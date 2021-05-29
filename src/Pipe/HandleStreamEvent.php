@@ -4,15 +4,14 @@ declare(strict_types=1);
 
 namespace Chronhub\Projector\Pipe;
 
-use Closure;
-use Chronhub\Projector\Context\Context;
 use Chronhub\Chronicler\Stream\StreamName;
-use Chronhub\Projector\Exception\RuntimeException;
+use Chronhub\Chronicler\Support\Contracts\Chronicler;
+use Chronhub\Projector\Context\Context;
 use Chronhub\Projector\Factory\MergeStreamIterator;
 use Chronhub\Projector\Factory\StreamEventIterator;
-use Chronhub\Projector\Support\Contracts\Repository;
-use Chronhub\Chronicler\Support\Contracts\Chronicler;
 use Chronhub\Projector\Support\Contracts\ProjectionQueryFilter;
+use Chronhub\Projector\Support\Contracts\Repository;
+use Closure;
 use function array_keys;
 use function array_values;
 
@@ -34,7 +33,7 @@ final class HandleStreamEvent
 
             $eventHandled = $eventHandlers($context, $event, $eventPosition, $this->repository);
 
-            if ( ! $eventHandled || $context->runner()->isStopped()) {
+            if (!$eventHandled || $context->runner()->isStopped()) {
                 return $next($context);
             }
         }
@@ -48,14 +47,8 @@ final class HandleStreamEvent
 
         $queryFilter = $context->queryFilter();
 
-        $isProjectionQueryFilter = $queryFilter instanceof ProjectionQueryFilter;
-
-        if ($this->repository && ! $isProjectionQueryFilter) {
-            throw new RuntimeException('Persistent projector require an implementation of projection query filter');
-        }
-
         foreach ($context->streamPosition()->all() as $streamName => $position) {
-            if ($isProjectionQueryFilter) {
+            if ($queryFilter instanceof ProjectionQueryFilter) {
                 $queryFilter->setCurrentPosition($position + 1);
             }
 
