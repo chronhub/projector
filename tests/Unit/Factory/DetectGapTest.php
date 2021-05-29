@@ -67,30 +67,6 @@ final class DetectGapTest extends TestCaseWithProphecy
     /**
      * @test
      */
-    public function it_does_not_detect_gap_when_detection_windows_is_active(): void
-    {
-        $clock = new UniversalSystemClock();
-
-        $time = UniversalPointInTime::now();
-
-        $eventTime = $time->sub('PT60S')->toString();
-
-        $this->streamPosition->hasNextPosition(Argument::type('string'), Argument::type('integer'))->shouldNotBeCalled();
-
-        $gapDetector = new DetectGap(
-            $this->streamPosition->reveal(),
-            $clock,
-            [5, 10, 20],
-            'PT60S'
-        );
-
-        $this->assertFalse($gapDetector->detect('customer', 10, $eventTime));
-        $this->assertFalse($gapDetector->hasGap());
-    }
-
-    /**
-     * @test
-     */
     public function it_does_not_detect_gap_when_next_position_is_not_available(): void
     {
         $clock = new UniversalSystemClock();

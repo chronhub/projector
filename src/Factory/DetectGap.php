@@ -27,17 +27,23 @@ class DetectGap
             return false;
         }
 
+        if ($this->streamPosition->hasNextPosition($streamName, $eventPosition)) {
+            return false;
+        }
+
+        $gapDetected = $this->gapDetected = array_key_exists($this->retries, $this->retriesInMs);
+
+        if ( ! $gapDetected) {
+            return $this->gapDetected = false;
+        }
+
         $now = $this->clock->fromNow()->sub($this->detectionWindows);
 
         if ($now->after($this->clock->fromString($eventTime))) {
             return false;
         }
 
-        if ($this->streamPosition->hasNextPosition($streamName, $eventPosition)) {
-            return false;
-        }
-
-        return $this->gapDetected = array_key_exists($this->retries, $this->retriesInMs);
+        return $this->gapDetected = true;
     }
 
     public function hasGap(): bool
