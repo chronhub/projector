@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Chronhub\Projector;
 
-final class RunnerController
+class RunnerController
 {
     private bool $runInBackground = false;
     private bool $isStopped = false;
