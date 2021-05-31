@@ -46,8 +46,6 @@ final class ProjectionRepository implements Repository
 
     public function reset(): void
     {
-        // solve the issue when deleting stream which can not be
-        // create on emit event as the is stream created is still true
         $this->context->setStreamCreated(false);
 
         $this->resetProjection();
