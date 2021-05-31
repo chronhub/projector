@@ -46,6 +46,7 @@ final class ServiceManagerTest extends TestCaseWithOrchestra
             $this->app->make(InMemoryProjectionProvider::class),
             new InMemoryProjectionQueryScope(),
             $this->app->make(Clock::class),
+            null,
             []
         );
 

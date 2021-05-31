@@ -6,6 +6,7 @@ namespace Chronhub\Projector;
 
 use Illuminate\Support\Arr;
 use Illuminate\Contracts\Config\Repository;
+use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Contracts\Foundation\Application;
 use Chronhub\Projector\Support\Contracts\Manager;
 use Chronhub\Foundation\Support\Contracts\Clock\Clock;
@@ -67,10 +68,11 @@ final class DefaultServiceManager implements ServiceManager
 
     private function createDefaultProjectorManager(array $config): Manager
     {
-//        $dispatcher = null;
-//        if (true === ($config['dispatch_projector_events'] ?? false)) {
-//            $dispatcher = $this->app->get(Dispatcher::class);
-//        }
+        $dispatcher = null;
+
+        if (true === ($config['dispatch_projector_events'] ?? false)) {
+            $dispatcher = $this->app->get(Dispatcher::class);
+        }
 
         return new DefaultManager(
             $this->app->get(ChroniclerManager::class)->create($config['chronicler']),
@@ -78,6 +80,7 @@ final class DefaultServiceManager implements ServiceManager
             $this->determineProjectionProvider($config),
             $this->app->make($config['scope']),
             $this->app->get(Clock::class),
+            $dispatcher,
             $this->determineProjectorOptions($config['options'])
         );
     }

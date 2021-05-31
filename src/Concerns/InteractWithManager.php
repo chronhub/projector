@@ -6,11 +6,13 @@ namespace Chronhub\Projector\Concerns;
 
 use Chronhub\Projector\Context\Context;
 use Chronhub\Projector\Factory\DetectGap;
+use Illuminate\Contracts\Events\Dispatcher;
 use Chronhub\Projector\Factory\EventCounter;
 use Chronhub\Projector\Factory\DefaultOption;
 use Chronhub\Projector\Factory\StreamPosition;
 use Chronhub\Projector\Repository\RepositoryLock;
 use Chronhub\Projector\Support\Contracts\Repository;
+use Chronhub\Projector\Repository\EventableRepository;
 use Chronhub\Projector\Repository\ReadModelRepository;
 use Chronhub\Projector\Repository\ProjectionRepository;
 use Chronhub\Projector\Support\Contracts\Factory\Option;
@@ -46,13 +48,19 @@ trait InteractWithManager
         $repositoryClass = $readModel instanceof ReadModel
             ? ReadModelRepository::class : ProjectionRepository::class;
 
-        return new $repositoryClass(
+        $repository = new $repositoryClass(
             $context,
             $this->projectionProvider,
             $this->createRepositoryLock($context->option()),
             $streamName,
             $readModel ?? $this->chronicler
         );
+
+        if ($this->events instanceof Dispatcher) {
+            $repository = new EventableRepository($repository, $this->events);
+        }
+
+        return $repository;
     }
 
     protected function createGapDetector(StreamPosition $streamPositions, Option $option): DetectGap

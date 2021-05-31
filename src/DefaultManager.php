@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Chronhub\Projector;
 
 use Illuminate\Database\QueryException;
+use Illuminate\Contracts\Events\Dispatcher;
 use Chronhub\Projector\Factory\EventCounter;
 use Chronhub\Chronicler\Exception\QueryFailure;
 use Chronhub\Projector\Support\Contracts\Manager;
@@ -30,6 +31,7 @@ final class DefaultManager implements Manager
                                 protected ProjectionProvider $projectionProvider,
                                 protected ProjectionQueryScope $projectionQueryScope,
                                 protected Clock $clock,
+                                protected ?Dispatcher $events = null,
                                 protected Option|array $options = [])
     {
     }
