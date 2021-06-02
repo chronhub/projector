@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Chronhub\Projector\Tests\Functional\Projection;
+namespace Chronhub\Projector\Tests\Functional\InMemory;
 
 use Chronhub\Chronicler\Stream\StreamName;
 use Chronhub\Foundation\Aggregate\AggregateChanged;
+use Chronhub\Projector\Tests\Functional\Util\FeedChroniclerWithDeposits;
 use Chronhub\Projector\Tests\TestCaseWithOrchestra;
 use Chronhub\Projector\Context\ContextualProjection;
 use Chronhub\Foundation\Support\Contracts\Clock\Clock;
 use Chronhub\Projector\Support\Contracts\PersistentProjector;
-use Chronhub\Projector\Tests\Util\FeedChroniclerWithDeposits;
 use Chronhub\Projector\Support\Contracts\Model\ProjectionModel;
 use Chronhub\Chronicler\Support\BankAccount\Model\Account\DepositMade;
 

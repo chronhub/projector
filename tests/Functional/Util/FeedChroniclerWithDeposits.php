@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Chronhub\Projector\Tests\Util;
+namespace Chronhub\Projector\Tests\Functional\Util;
 
 use Ramsey\Uuid\Uuid;
 use Chronhub\Chronicler\Stream\Stream;
