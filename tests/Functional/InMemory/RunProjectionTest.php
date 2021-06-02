@@ -5,14 +5,16 @@ declare(strict_types=1);
 namespace Chronhub\Projector\Tests\Functional\InMemory;
 
 use Chronhub\Chronicler\Stream\StreamName;
+use Chronhub\Chronicler\Support\BankAccount\Model\Account\DepositMade;
 use Chronhub\Foundation\Aggregate\AggregateChanged;
+use Chronhub\Foundation\Support\Contracts\Clock\Clock;
+use Chronhub\Projector\Context\ContextualProjection;
+use Chronhub\Projector\Support\Contracts\Model\ProjectionModel;
+use Chronhub\Projector\Support\Contracts\PersistentProjector;
+use Chronhub\Projector\Support\Contracts\ProjectorFactory;
 use Chronhub\Projector\Tests\Functional\Util\FeedChroniclerWithDeposits;
 use Chronhub\Projector\Tests\TestCaseWithOrchestra;
-use Chronhub\Projector\Context\ContextualProjection;
-use Chronhub\Foundation\Support\Contracts\Clock\Clock;
-use Chronhub\Projector\Support\Contracts\PersistentProjector;
-use Chronhub\Projector\Support\Contracts\Model\ProjectionModel;
-use Chronhub\Chronicler\Support\BankAccount\Model\Account\DepositMade;
+use Generator;
 
 final class RunProjectionTest extends TestCaseWithOrchestra
 {
@@ -23,18 +25,44 @@ final class RunProjectionTest extends TestCaseWithOrchestra
      */
     public function it_run(): void
     {
+        /** @var PersistentProjector|ProjectorFactory $projection */
         $projection = $this->projector->createProjection('customer_stream');
         $projection
             ->withQueryFilter($this->projector->queryScope()->fromIncludedPosition())
-            ->initialize(fn (): array => ['called' => false])
+            ->initialize(fn(): array => ['called' => false])
             ->fromStreams('customer')
             ->whenAny(function (AggregateChanged $event, array $state): array {
+
                 $state['called'] = true;
 
                 return $state;
             })->run(false);
 
         $this->assertFalse($projection->getState()['called']);
+        $this->assertEquals('customer_stream', $projection->getStreamName());
+    }
+
+    /**
+     * @test
+     * @dataProvider provideTimer
+     */
+    public function it_run_with_timer(int|string $timer): void
+    {
+        /** @var PersistentProjector|ProjectorFactory $projection */
+        $projection = $this->projector->createProjection('customer_stream');
+        $projection
+            ->until($timer)
+            ->withQueryFilter($this->projector->queryScope()->fromIncludedPosition())
+            ->initialize(fn(): array => ['called' => false])
+            ->fromStreams('customer')
+            ->whenAny(function (AggregateChanged $event, array $state): array {
+                $state['called'] = true;
+
+                return $state;
+            })->run(true);
+
+        $this->assertFalse($projection->getState()['called']);
+        $this->assertEquals('customer_stream', $projection->getStreamName());
     }
 
     /**
@@ -49,7 +77,7 @@ final class RunProjectionTest extends TestCaseWithOrchestra
         $projection = $this->projector->createProjection('deposits');
 
         $projection
-            ->initialize(fn (): array => ['called' => 0])
+            ->initialize(fn(): array => ['called' => 0])
             ->withQueryFilter($this->projector->queryScope()->fromIncludedPosition())
             ->fromStreams('account_stream')
             ->whenAny(function (AggregateChanged $event, array $state) use ($test): array {
@@ -80,7 +108,7 @@ final class RunProjectionTest extends TestCaseWithOrchestra
 
         $projection
             ->withQueryFilter($this->projector->queryScope()->fromIncludedPosition())
-            ->initialize(fn (): array => ['events' => 0, 'deposits' => 0])
+            ->initialize(fn(): array => ['events' => 0, 'deposits' => 0])
             ->fromStreams('account_stream')
             ->whenAny(function (DepositMade $event, array $state): array {
                 /* @var ContextualProjection $this * */
@@ -114,7 +142,7 @@ final class RunProjectionTest extends TestCaseWithOrchestra
 
         $projection
             ->withQueryFilter($this->projector->queryScope()->fromIncludedPosition())
-            ->initialize(fn (): array => ['events' => 0, 'deposits' => 0])
+            ->initialize(fn(): array => ['events' => 0, 'deposits' => 0])
             ->fromStreams('account_stream')
             ->when([
                 'deposit-made' => function (DepositMade $event, array $state): array {
@@ -149,7 +177,7 @@ final class RunProjectionTest extends TestCaseWithOrchestra
 
         $projection
             ->withQueryFilter($this->projector->queryScope()->fromIncludedPosition())
-            ->initialize(fn (): array => ['events' => 0, 'deposits' => 0])
+            ->initialize(fn(): array => ['events' => 0, 'deposits' => 0])
             ->fromStreams('account_stream')
             ->whenAny(function (DepositMade $event, array $state): array {
                 /* @var ContextualProjection $this */
@@ -253,7 +281,7 @@ final class RunProjectionTest extends TestCaseWithOrchestra
 
         $projection
             ->withQueryFilter($this->projector->queryScope()->fromIncludedPosition())
-            ->initialize(fn (): array => ['events' => 0, 'deposits' => 0])
+            ->initialize(fn(): array => ['events' => 0, 'deposits' => 0])
             ->fromStreams('account_stream')
             ->whenAny(function (DepositMade $event, array $state): array {
                 /* @var ContextualProjection $this * */
@@ -307,7 +335,7 @@ final class RunProjectionTest extends TestCaseWithOrchestra
 
         $projection
             ->withQueryFilter($this->projector->queryScope()->fromIncludedPosition())
-            ->initialize(fn (): array => ['events' => 0, 'deposits' => 0])
+            ->initialize(fn(): array => ['events' => 0, 'deposits' => 0])
             ->fromStreams('account_stream')
             ->whenAny(function (DepositMade $event, array $state): array {
                 /* @var ContextualProjection $this * */
@@ -388,5 +416,11 @@ final class RunProjectionTest extends TestCaseWithOrchestra
 
         $this->chronicler->delete(new StreamName('deposits'));
         $this->assertFalse($this->chronicler->hasStream(new StreamName('deposits')));
+    }
+
+    public function provideTimer(): Generator
+    {
+        yield [1];
+        yield ['PT1S'];
     }
 }

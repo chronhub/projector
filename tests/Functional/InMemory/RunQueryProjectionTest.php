@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Chronhub\Projector\Tests\Functional\InMemory;
 
+use Chronhub\Foundation\Support\Contracts\Clock\Clock;
 use Ramsey\Uuid\Uuid;
 use Chronhub\Chronicler\Stream\Stream;
 use Chronhub\Chronicler\Stream\StreamName;
@@ -46,6 +47,7 @@ final class RunQueryProjectionTest extends TestCaseWithOrchestra
                 /* @var ContextualQuery $this */
                 $test->assertEquals('account_stream', $this->streamName());
                 $test->assertEquals(['count' => 0], $state);
+                $test->assertInstanceOf(Clock::class, $this->clock());
             })
             ->run(false);
 
@@ -67,6 +69,7 @@ final class RunQueryProjectionTest extends TestCaseWithOrchestra
             ->whenAny(function (DepositMade $event, array $state): array {
                 /* @var ContextualQuery $this */
                 $state['deposits'] += $event->deposit();
+
 
                 return $state;
             })
