@@ -4,20 +4,22 @@ declare(strict_types=1);
 
 namespace Chronhub\Projector\Tests\Functional\InMemory;
 
-use Chronhub\Chronicler\Stream\StreamName;
-use Chronhub\Chronicler\Support\BankAccount\Model\Account\DepositMade;
-use Chronhub\Foundation\Aggregate\AggregateChanged;
-use Chronhub\Foundation\Support\Contracts\Clock\Clock;
-use Chronhub\Projector\Context\ContextualProjection;
-use Chronhub\Projector\Support\Contracts\Model\ProjectionModel;
-use Chronhub\Projector\Support\Contracts\PersistentProjector;
-use Chronhub\Projector\Support\Contracts\ProjectorFactory;
-use Chronhub\Projector\Tests\Functional\Util\FeedChroniclerWithDeposits;
-use Chronhub\Projector\Tests\TestCaseWithOrchestra;
 use Generator;
+use Chronhub\Chronicler\Stream\StreamName;
+use Chronhub\Foundation\Aggregate\AggregateChanged;
+use Chronhub\Projector\Tests\TestCaseWithOrchestra;
+use Chronhub\Projector\Context\ContextualProjection;
+use Chronhub\Foundation\Support\Contracts\Clock\Clock;
+use Chronhub\Projector\Support\Contracts\ProjectorFactory;
+use Chronhub\Projector\Support\Contracts\PersistentProjector;
+use Chronhub\Projector\Support\Contracts\Model\ProjectionModel;
+use Chronhub\Projector\Tests\Functional\Util\SetupInMemoryChronicler;
+use Chronhub\Chronicler\Support\BankAccount\Model\Account\DepositMade;
+use Chronhub\Projector\Tests\Functional\Util\FeedChroniclerWithDeposits;
 
 final class RunProjectionTest extends TestCaseWithOrchestra
 {
+    use SetupInMemoryChronicler;
     use FeedChroniclerWithDeposits;
 
     /**
@@ -29,10 +31,9 @@ final class RunProjectionTest extends TestCaseWithOrchestra
         $projection = $this->projector->createProjection('customer_stream');
         $projection
             ->withQueryFilter($this->projector->queryScope()->fromIncludedPosition())
-            ->initialize(fn(): array => ['called' => false])
+            ->initialize(fn (): array => ['called' => false])
             ->fromStreams('customer')
             ->whenAny(function (AggregateChanged $event, array $state): array {
-
                 $state['called'] = true;
 
                 return $state;
@@ -53,7 +54,7 @@ final class RunProjectionTest extends TestCaseWithOrchestra
         $projection
             ->until($timer)
             ->withQueryFilter($this->projector->queryScope()->fromIncludedPosition())
-            ->initialize(fn(): array => ['called' => false])
+            ->initialize(fn (): array => ['called' => false])
             ->fromStreams('customer')
             ->whenAny(function (AggregateChanged $event, array $state): array {
                 $state['called'] = true;
@@ -77,12 +78,12 @@ final class RunProjectionTest extends TestCaseWithOrchestra
         $projection = $this->projector->createProjection('deposits');
 
         $projection
-            ->initialize(fn(): array => ['called' => 0])
+            ->initialize(fn (): array => ['called' => 0])
             ->withQueryFilter($this->projector->queryScope()->fromIncludedPosition())
-            ->fromStreams('account_stream')
+            ->fromStreams('transactions')
             ->whenAny(function (AggregateChanged $event, array $state) use ($test): array {
                 /* @var ContextualProjection $this */
-                $test->assertEquals('account_stream', $this->streamName());
+                $test->assertEquals('transactions', $this->streamName());
                 $test->assertInstanceOf(Clock::class, $this->clock());
                 $test->assertInstanceOf(DepositMade::class, $event);
 
@@ -108,8 +109,8 @@ final class RunProjectionTest extends TestCaseWithOrchestra
 
         $projection
             ->withQueryFilter($this->projector->queryScope()->fromIncludedPosition())
-            ->initialize(fn(): array => ['events' => 0, 'deposits' => 0])
-            ->fromStreams('account_stream')
+            ->initialize(fn (): array => ['events' => 0, 'deposits' => 0])
+            ->fromStreams('transactions')
             ->whenAny(function (DepositMade $event, array $state): array {
                 /* @var ContextualProjection $this * */
                 ++$state['events'];
@@ -123,7 +124,7 @@ final class RunProjectionTest extends TestCaseWithOrchestra
         $this->assertInstanceOf(ProjectionModel::class, $model);
 
         $this->assertEquals('deposits', $model->name());
-        $this->assertEquals('{"account_stream":10}', $model->position());
+        $this->assertEquals('{"transactions":10}', $model->position());
         $this->assertEquals('idle', $model->status());
         $this->assertEquals('{"events":10,"deposits":1000}', $model->state());
         $this->assertNull($model->lockedUntil());
@@ -142,8 +143,8 @@ final class RunProjectionTest extends TestCaseWithOrchestra
 
         $projection
             ->withQueryFilter($this->projector->queryScope()->fromIncludedPosition())
-            ->initialize(fn(): array => ['events' => 0, 'deposits' => 0])
-            ->fromStreams('account_stream')
+            ->initialize(fn (): array => ['events' => 0, 'deposits' => 0])
+            ->fromStreams('transactions')
             ->when([
                 'deposit-made' => function (DepositMade $event, array $state): array {
                     ++$state['events'];
@@ -158,7 +159,7 @@ final class RunProjectionTest extends TestCaseWithOrchestra
         $this->assertInstanceOf(ProjectionModel::class, $model);
 
         $this->assertEquals('deposits', $model->name());
-        $this->assertEquals('{"account_stream":10}', $model->position());
+        $this->assertEquals('{"transactions":10}', $model->position());
         $this->assertEquals('idle', $model->status());
         $this->assertEquals('{"events":10,"deposits":1000}', $model->state());
         $this->assertNull($model->lockedUntil());
@@ -177,8 +178,8 @@ final class RunProjectionTest extends TestCaseWithOrchestra
 
         $projection
             ->withQueryFilter($this->projector->queryScope()->fromIncludedPosition())
-            ->initialize(fn(): array => ['events' => 0, 'deposits' => 0])
-            ->fromStreams('account_stream')
+            ->initialize(fn (): array => ['events' => 0, 'deposits' => 0])
+            ->fromStreams('transactions')
             ->whenAny(function (DepositMade $event, array $state): array {
                 /* @var ContextualProjection $this */
                 ++$state['events'];
@@ -196,7 +197,7 @@ final class RunProjectionTest extends TestCaseWithOrchestra
         $this->assertInstanceOf(ProjectionModel::class, $model);
 
         $this->assertEquals('deposits', $model->name());
-        $this->assertEquals('{"account_stream":5}', $model->position());
+        $this->assertEquals('{"transactions":5}', $model->position());
         $this->assertEquals('idle', $model->status());
         $this->assertEquals('{"events":5,"deposits":500}', $model->state());
         $this->assertNull($model->lockedUntil());
@@ -215,7 +216,7 @@ final class RunProjectionTest extends TestCaseWithOrchestra
 
         $projection
             ->withQueryFilter($this->projector->queryScope()->fromIncludedPosition())
-            ->fromStreams('account_stream')
+            ->fromStreams('transactions')
             ->whenAny(function (DepositMade $event): void {
                 /* @var ContextualProjection $this */
                 $this->emit($event);
@@ -226,7 +227,7 @@ final class RunProjectionTest extends TestCaseWithOrchestra
         $this->assertInstanceOf(ProjectionModel::class, $model);
 
         $this->assertEquals('transactions', $model->name());
-        $this->assertEquals('{"account_stream":10}', $model->position());
+        $this->assertEquals('{"transactions":10}', $model->position());
         $this->assertEquals('idle', $model->status());
         $this->assertEquals('{}', $model->state());
         $this->assertNull($model->lockedUntil());
@@ -247,7 +248,7 @@ final class RunProjectionTest extends TestCaseWithOrchestra
 
         $projection
             ->withQueryFilter($this->projector->queryScope()->fromIncludedPosition())
-            ->fromStreams('account_stream')
+            ->fromStreams('transactions')
             ->whenAny(function (DepositMade $event): void {
                 /* @var ContextualProjection $this */
                 $this->linkTo('deposits', $event);
@@ -258,7 +259,7 @@ final class RunProjectionTest extends TestCaseWithOrchestra
         $this->assertInstanceOf(ProjectionModel::class, $model);
 
         $this->assertEquals('transactions', $model->name());
-        $this->assertEquals('{"account_stream":10}', $model->position());
+        $this->assertEquals('{"transactions":10}', $model->position());
         $this->assertEquals('idle', $model->status());
         $this->assertEquals('{}', $model->state());
         $this->assertNull($model->lockedUntil());
@@ -281,8 +282,8 @@ final class RunProjectionTest extends TestCaseWithOrchestra
 
         $projection
             ->withQueryFilter($this->projector->queryScope()->fromIncludedPosition())
-            ->initialize(fn(): array => ['events' => 0, 'deposits' => 0])
-            ->fromStreams('account_stream')
+            ->initialize(fn (): array => ['events' => 0, 'deposits' => 0])
+            ->fromStreams('transactions')
             ->whenAny(function (DepositMade $event, array $state): array {
                 /* @var ContextualProjection $this * */
                 ++$state['events'];
@@ -295,7 +296,7 @@ final class RunProjectionTest extends TestCaseWithOrchestra
 
         $this->assertInstanceOf(ProjectionModel::class, $model);
         $this->assertEquals('deposits', $model->name());
-        $this->assertEquals('{"account_stream":10}', $model->position());
+        $this->assertEquals('{"transactions":10}', $model->position());
         $this->assertEquals('idle', $model->status());
         $this->assertEquals('{"events":10,"deposits":1000}', $model->state());
         $this->assertNull($model->lockedUntil());
@@ -316,7 +317,7 @@ final class RunProjectionTest extends TestCaseWithOrchestra
         $rerunModel = $this->projectionProvider->findByName('deposits');
 
         $this->assertEquals('deposits', $rerunModel->name());
-        $this->assertEquals('{"account_stream":10}', $rerunModel->position());
+        $this->assertEquals('{"transactions":10}', $rerunModel->position());
         $this->assertEquals('idle', $rerunModel->status());
         $this->assertEquals('{"events":10,"deposits":1000}', $rerunModel->state());
         $this->assertNull($rerunModel->lockedUntil());
@@ -335,8 +336,8 @@ final class RunProjectionTest extends TestCaseWithOrchestra
 
         $projection
             ->withQueryFilter($this->projector->queryScope()->fromIncludedPosition())
-            ->initialize(fn(): array => ['events' => 0, 'deposits' => 0])
-            ->fromStreams('account_stream')
+            ->initialize(fn (): array => ['events' => 0, 'deposits' => 0])
+            ->fromStreams('transactions')
             ->whenAny(function (DepositMade $event, array $state): array {
                 /* @var ContextualProjection $this * */
                 ++$state['events'];
@@ -349,7 +350,7 @@ final class RunProjectionTest extends TestCaseWithOrchestra
 
         $this->assertInstanceOf(ProjectionModel::class, $model);
         $this->assertEquals('deposits', $model->name());
-        $this->assertEquals('{"account_stream":10}', $model->position());
+        $this->assertEquals('{"transactions":10}', $model->position());
         $this->assertEquals('idle', $model->status());
         $this->assertEquals('{"events":10,"deposits":1000}', $model->state());
         $this->assertNull($model->lockedUntil());
@@ -369,7 +370,7 @@ final class RunProjectionTest extends TestCaseWithOrchestra
         $rerunModel = $this->projectionProvider->findByName('deposits');
 
         $this->assertEquals('deposits', $rerunModel->name());
-        $this->assertEquals('{"account_stream":10}', $rerunModel->position());
+        $this->assertEquals('{"transactions":10}', $rerunModel->position());
         $this->assertEquals('idle', $rerunModel->status());
         $this->assertEquals('{"events":10,"deposits":1000}', $rerunModel->state());
         $this->assertNull($rerunModel->lockedUntil());
@@ -388,7 +389,7 @@ final class RunProjectionTest extends TestCaseWithOrchestra
 
         $projection
             ->withQueryFilter($this->projector->queryScope()->fromIncludedPosition())
-            ->fromStreams('account_stream')
+            ->fromStreams('transactions')
             ->whenAny(function (DepositMade $event): void {
                 /* @var ContextualProjection $this */
                 $this->linkTo('deposits', $event);
@@ -399,7 +400,7 @@ final class RunProjectionTest extends TestCaseWithOrchestra
         $this->assertInstanceOf(ProjectionModel::class, $model);
 
         $this->assertEquals('transactions', $model->name());
-        $this->assertEquals('{"account_stream":10}', $model->position());
+        $this->assertEquals('{"transactions":10}', $model->position());
         $this->assertEquals('idle', $model->status());
         $this->assertEquals('{}', $model->state());
         $this->assertNull($model->lockedUntil());
@@ -416,6 +417,34 @@ final class RunProjectionTest extends TestCaseWithOrchestra
 
         $this->chronicler->delete(new StreamName('deposits'));
         $this->assertFalse($this->chronicler->hasStream(new StreamName('deposits')));
+    }
+
+    /**
+     * @test
+     */
+    public function it_run_projection_from_all_streams(): void
+    {
+        $test = $this;
+        $this->feedEventStoreWithAccount();
+        $this->feedEventStoreWithDeposits(2);
+
+        $projection = $this->projector->createProjection('deposits');
+
+        $projection
+            ->initialize(fn (): array => ['called' => 0])
+            ->withQueryFilter($this->projector->queryScope()->fromIncludedPosition())
+            ->fromAll()
+            ->whenAny(function (AggregateChanged $event, array $state) use ($test): array {
+                /* @var ContextualProjection $this */
+                $test->assertContains($this->streamName(), ['account', 'transactions']);
+
+                ++$state['called'];
+
+                return $state;
+            })
+            ->run(false);
+
+        $this->assertEquals(['called' => 3], $projection->getState());
     }
 
     public function provideTimer(): Generator

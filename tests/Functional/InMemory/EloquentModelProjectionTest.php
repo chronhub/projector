@@ -1,18 +1,19 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Chronhub\Projector\Tests\Functional\InMemory;
 
-use Chronhub\Foundation\Clock\UniversalPointInTime;
-use Chronhub\Projector\Model\Projection;
-use Chronhub\Projector\ProjectorServiceProvider;
 use Chronhub\Projector\Status;
-use Chronhub\Projector\Support\Contracts\Model\ProjectionModel;
-use Chronhub\Projector\Support\Contracts\Model\ProjectionProvider;
-use Chronhub\Projector\Tests\TestCaseWithOrchestra;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\QueryException;
+use Chronhub\Projector\Model\Projection;
+use Chronhub\Projector\ProjectorServiceProvider;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Chronhub\Foundation\Clock\UniversalPointInTime;
+use Chronhub\Projector\Tests\TestCaseWithOrchestra;
+use Chronhub\Projector\Support\Contracts\Model\ProjectionModel;
+use Chronhub\Projector\Support\Contracts\Model\ProjectionProvider;
 
 final class EloquentModelProjectionTest extends TestCaseWithOrchestra
 {

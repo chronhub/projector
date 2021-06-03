@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Chronhub\Projector\Tests\Functional\InMemory;
 
-use Chronhub\Foundation\Support\Contracts\Clock\Clock;
 use Ramsey\Uuid\Uuid;
 use Chronhub\Chronicler\Stream\Stream;
 use Chronhub\Chronicler\Stream\StreamName;
@@ -18,6 +17,7 @@ use Chronhub\Foundation\Clock\UniversalPointInTime;
 use Chronhub\Projector\Tests\TestCaseWithOrchestra;
 use Chronhub\Chronicler\Support\Contracts\Chronicler;
 use Chronhub\Foundation\Aggregate\GenericAggregateId;
+use Chronhub\Foundation\Support\Contracts\Clock\Clock;
 use Chronhub\Foundation\Support\Contracts\Message\Header;
 use Chronhub\Chronicler\Factory\ChroniclerServiceProvider;
 use Chronhub\Foundation\Support\Contracts\Aggregate\AggregateId;
@@ -69,7 +69,6 @@ final class RunQueryProjectionTest extends TestCaseWithOrchestra
             ->whenAny(function (DepositMade $event, array $state): array {
                 /* @var ContextualQuery $this */
                 $state['deposits'] += $event->deposit();
-
 
                 return $state;
             })

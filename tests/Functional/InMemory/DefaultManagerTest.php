@@ -1,35 +1,36 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Chronhub\Projector\Tests\Functional\InMemory;
 
-use Chronhub\Chronicler\Driver\InMemory\InMemoryEventStream;
-use Chronhub\Chronicler\Factory\ChroniclerServiceProvider;
-use Chronhub\Chronicler\Stream\Stream;
-use Chronhub\Chronicler\Stream\StreamName;
-use Chronhub\Chronicler\Support\BankAccount\Model\Account\AccountId;
-use Chronhub\Chronicler\Support\BankAccount\Model\Account\Balance;
-use Chronhub\Chronicler\Support\BankAccount\Model\Account\DepositMade;
-use Chronhub\Chronicler\Support\BankAccount\Model\Customer\CustomerId;
-use Chronhub\Chronicler\Support\Contracts\Chronicler;
-use Chronhub\Chronicler\Support\Facade\Chronicle;
-use Chronhub\Foundation\Clock\UniversalPointInTime;
-use Chronhub\Foundation\Reporter\Services\FoundationServiceProvider;
-use Chronhub\Foundation\Support\Contracts\Aggregate\AggregateId;
-use Chronhub\Foundation\Support\Contracts\Message\Header;
-use Chronhub\Projector\DefaultManager;
-use Chronhub\Projector\Exception\ProjectionNotFound;
-use Chronhub\Projector\ProjectorServiceProvider;
-use Chronhub\Projector\ProjectProjection;
-use Chronhub\Projector\ProjectQuery;
-use Chronhub\Projector\ProjectReadModel;
-use Chronhub\Projector\Status;
-use Chronhub\Projector\Support\Facade\Project;
-use Chronhub\Projector\Support\ReadModel\InMemoryReadModel;
-use Chronhub\Projector\Support\Scope\InMemoryProjectionQueryScope;
-use Chronhub\Projector\Tests\TestCaseWithOrchestra;
 use Generator;
 use Ramsey\Uuid\Uuid;
+use Chronhub\Projector\Status;
+use Chronhub\Projector\ProjectQuery;
+use Chronhub\Chronicler\Stream\Stream;
+use Chronhub\Projector\DefaultManager;
+use Chronhub\Projector\ProjectReadModel;
+use Chronhub\Projector\ProjectProjection;
+use Chronhub\Chronicler\Stream\StreamName;
+use Chronhub\Projector\Support\Facade\Project;
+use Chronhub\Projector\ProjectorServiceProvider;
+use Chronhub\Chronicler\Support\Facade\Chronicle;
+use Chronhub\Foundation\Clock\UniversalPointInTime;
+use Chronhub\Projector\Tests\TestCaseWithOrchestra;
+use Chronhub\Projector\Exception\ProjectionNotFound;
+use Chronhub\Chronicler\Support\Contracts\Chronicler;
+use Chronhub\Foundation\Support\Contracts\Message\Header;
+use Chronhub\Chronicler\Factory\ChroniclerServiceProvider;
+use Chronhub\Projector\Support\ReadModel\InMemoryReadModel;
+use Chronhub\Chronicler\Driver\InMemory\InMemoryEventStream;
+use Chronhub\Foundation\Support\Contracts\Aggregate\AggregateId;
+use Chronhub\Chronicler\Support\BankAccount\Model\Account\Balance;
+use Chronhub\Projector\Support\Scope\InMemoryProjectionQueryScope;
+use Chronhub\Chronicler\Support\BankAccount\Model\Account\AccountId;
+use Chronhub\Foundation\Reporter\Services\FoundationServiceProvider;
+use Chronhub\Chronicler\Support\BankAccount\Model\Account\DepositMade;
+use Chronhub\Chronicler\Support\BankAccount\Model\Customer\CustomerId;
 
 final class DefaultManagerTest extends TestCaseWithOrchestra
 {
