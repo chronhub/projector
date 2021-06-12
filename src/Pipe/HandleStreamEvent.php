@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Chronhub\Projector\Pipe;
 
+use Chronhub\Chronicler\Exception\StreamNotFound;
 use Closure;
 use Chronhub\Projector\Context\Context;
 use Chronhub\Chronicler\Stream\StreamName;
@@ -52,9 +53,13 @@ final class HandleStreamEvent
                 $queryFilter->setCurrentPosition($position + 1);
             }
 
-            $events = $this->chronicler->retrieveFiltered(new StreamName($streamName), $queryFilter);
+            try{
+                $events = $this->chronicler->retrieveFiltered(new StreamName($streamName), $queryFilter);
 
-            $iterator[$streamName] = new StreamEventIterator($events);
+                $iterator[$streamName] = new StreamEventIterator($events);
+            }catch(StreamNotFound){
+                continue;
+            }
         }
 
         return new MergeStreamIterator(array_keys($iterator), ...array_values($iterator));

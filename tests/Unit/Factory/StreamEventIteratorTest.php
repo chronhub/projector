@@ -73,8 +73,10 @@ final class StreamEventIteratorTest extends TestCase
     /**
      * @test
      */
-    public function it_catch_stream_not_found_exception_with_empty_iterator(): void
+    public function it_does_not_catch_stream_not_found_exception_with_empty_iterator(): void
     {
+        $this->expectException(StreamNotFound::class);
+
         $iterator = new StreamEventIterator($this->provideStreamNotFoundWhileIterating());
 
         $this->assertFalse($iterator->key());

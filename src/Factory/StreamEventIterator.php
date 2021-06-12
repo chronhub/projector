@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace Chronhub\Projector\Factory;
 
-use Iterator;
-use Generator;
 use Chronhub\Foundation\Message\DomainEvent;
-use Chronhub\Chronicler\Exception\StreamNotFound;
-use Chronhub\Projector\Exception\RuntimeException;
 use Chronhub\Foundation\Support\Contracts\Message\Header;
+use Chronhub\Projector\Exception\RuntimeException;
+use Generator;
+use Iterator;
 
 final class StreamEventIterator implements Iterator
 {
@@ -28,25 +27,21 @@ final class StreamEventIterator implements Iterator
 
     public function next(): void
     {
-        try {
-            $this->currentEvent = $this->eventStreams->current();
+        $this->currentEvent = $this->eventStreams->current();
 
-            if ($this->currentEvent instanceof DomainEvent) {
-                $position = (int) $this->currentEvent->header(Header::INTERNAL_POSITION);
+        if ($this->currentEvent instanceof DomainEvent) {
+            $position = (int)$this->currentEvent->header(Header::INTERNAL_POSITION);
 
-                if ($position <= 0) {
-                    throw new RuntimeException("Stream event position must be greater than 0, current is $position");
-                }
-
-                $this->currentKey = $position;
-            } else {
-                $this->resetProperties();
+            if ($position <= 0) {
+                throw new RuntimeException("Stream event position must be greater than 0, current is $position");
             }
 
-            $this->eventStreams->next();
-        } catch (StreamNotFound) {
+            $this->currentKey = $position;
+        } else {
             $this->resetProperties();
         }
+
+        $this->eventStreams->next();
     }
 
     public function key(): bool|int
