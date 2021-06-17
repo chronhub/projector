@@ -106,6 +106,9 @@ trait InteractWithRepository
     {
         $runningProjection = Status::RUNNING();
 
+        // fixMe
+        // when the first projection does not work
+        // another projection can still acquire lock and running for a while
         try {
             $success = $this->provider->acquireLock(
                 $this->streamName,
