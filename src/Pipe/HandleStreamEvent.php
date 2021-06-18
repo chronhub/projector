@@ -58,6 +58,7 @@ final class HandleStreamEvent
 
                 $iterator[$streamName] = new StreamEventIterator($events);
             } catch (StreamNotFound) {
+                usleep($context->option()->sleep());// add another option
                 continue;
             }
         }
