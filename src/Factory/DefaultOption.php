@@ -11,15 +11,19 @@ class DefaultOption implements Option
 {
     use InteractWithOption;
 
+    protected array $retriesMs;
+
     public function __construct(
-        private bool $dispatchSignal = false,
-        private int $streamCacheSize = 1000,
-        private int $lockTimeoutMs = 1000,
-        private int $sleep = 100000,
-        private int $persistBlockSize = 1000,
-        private int $updateLockThreshold = 0,
-        private array $retriesMs = [0, 5, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 2000, 3000],
-        private string $detectionWindows = 'PT1H')
+        protected bool $dispatchSignal = false,
+        protected int $streamCacheSize = 1000,
+        protected int $lockTimeoutMs = 1000,
+        protected int $sleepBeforeUpdateLock = 10000,
+        protected int $sleepWhenStreamNotFound = 100000,
+        protected int $persistBlockSize = 1000,
+        protected int $updateLockThreshold = 0,
+        array|string $retriesMs = [0, 5, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 2000, 3000],
+        protected string $detectionWindows = 'PT1H')
     {
+        $this->setUpRetriesMs($retriesMs);
     }
 }

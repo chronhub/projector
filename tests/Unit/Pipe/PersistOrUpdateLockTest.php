@@ -51,7 +51,7 @@ final class PersistOrUpdateLockTest extends TestCaseWithProphecy
         $gap->hasGap()->willReturn(false)->shouldBeCalled();
 
         $context->option()->willReturn($option);
-        $option->sleep()->willReturn(1000)->shouldBeCalled();
+        $option->sleepBeforeUpdateLock()->willReturn(1000)->shouldBeCalled();
 
         $context->eventCounter()->willReturn($eventCounter->reveal());
         $eventCounter->isReset()->willReturn(true)->shouldBeCalled();

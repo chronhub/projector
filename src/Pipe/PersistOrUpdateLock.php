@@ -18,7 +18,7 @@ final class PersistOrUpdateLock
     {
         if ( ! $context->gap()->hasGap()) {
             $context->eventCounter()->isReset()
-                ? $this->sleepBeforeUpdateLock($context->option()->sleep())
+                ? $this->sleepBeforeUpdateLock($context->option()->sleepBeforeUpdateLock())
                 : $this->repository->persist();
         }
 

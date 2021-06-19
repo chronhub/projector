@@ -80,10 +80,6 @@ return [
     'options'    => [
         'default' => [],
 
-        'lazy' => [
-            Option::OPTION_UPDATE_LOCK_THRESHOLD => 5000,
-        ],
-
         'in_memory' => InMemoryProjectorOption::class,
 
         'snapshot' => [],

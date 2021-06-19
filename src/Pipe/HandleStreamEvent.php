@@ -13,6 +13,8 @@ use Chronhub\Projector\Factory\StreamEventIterator;
 use Chronhub\Projector\Support\Contracts\Repository;
 use Chronhub\Chronicler\Support\Contracts\Chronicler;
 use Chronhub\Projector\Support\Contracts\ProjectionQueryFilter;
+use function count;
+use function usleep;
 use function array_keys;
 use function array_values;
 
@@ -58,9 +60,12 @@ final class HandleStreamEvent
 
                 $iterator[$streamName] = new StreamEventIterator($events);
             } catch (StreamNotFound) {
-                usleep($context->option()->sleep());// add another option
                 continue;
             }
+        }
+
+        if (0 === count($iterator)) {
+            usleep($context->option()->sleepWhenStreamNotFound());
         }
 
         return new MergeStreamIterator(array_keys($iterator), ...array_values($iterator));
