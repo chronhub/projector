@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 use Chronhub\Projector\Model\Projection;
 use Chronhub\Projector\Model\InMemoryProjectionProvider;
-use Chronhub\Projector\Support\Contracts\Factory\Option;
 use Chronhub\Projector\Support\Console\StopProjectionCommand;
 use Chronhub\Projector\Support\Console\ResetProjectionCommand;
 use Chronhub\Projector\Support\Option\InMemoryProjectorOption;
