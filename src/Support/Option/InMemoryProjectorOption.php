@@ -15,7 +15,6 @@ final class InMemoryProjectorOption implements Option
     private int $streamCacheSize = 1000;
     private int $lockTimeoutMs = 0;
     private int $sleepBeforeUpdateLock = 10000;
-    private int $sleepWhenStreamNotFound = 100000;
     private int $persistBlockSize = 1;
     private int $updateLockThreshold = 0;
     private array $retriesMs = [];

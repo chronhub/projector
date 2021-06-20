@@ -9,7 +9,6 @@ interface Option
     public const OPTION_DISPATCH_SIGNAL = 'dispatchSignal';
     public const OPTION_STREAM_CACHE_SIZE = 'streamCacheSize';
     public const OPTION_SLEEP_BEFORE_UPDATE_LOCK = 'sleepBeforeUpdateLock';
-    public const OPTION_SLEEP_WHEN_STREAM_NOT_FOUND = 'sleepWhenStreamNotFound';
     public const OPTION_PERSIST_BLOCK_SIZE = 'persistBlockSize';
     public const OPTION_LOCK_TIMEOUT_MS = 'lockTimeoutMs';
     public const OPTION_UPDATE_LOCK_THRESHOLD = 'updateLockThreshold';
@@ -23,8 +22,6 @@ interface Option
     public function lockTimoutMs(): int;
 
     public function sleepBeforeUpdateLock(): int;
-
-    public function sleepWhenStreamNotFound(): int;
 
     public function persistBlockSize(): int;
 

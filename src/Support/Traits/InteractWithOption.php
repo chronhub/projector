@@ -30,11 +30,6 @@ trait InteractWithOption
         return $this->sleepBeforeUpdateLock;
     }
 
-    public function sleepWhenStreamNotFound(): int
-    {
-        return $this->sleepWhenStreamNotFound;
-    }
-
     public function persistBlockSize(): int
     {
         return $this->persistBlockSize;
@@ -62,7 +57,6 @@ trait InteractWithOption
             self::OPTION_STREAM_CACHE_SIZE           => $this->streamCacheSize(),
             self::OPTION_LOCK_TIMEOUT_MS             => $this->lockTimoutMs(),
             self::OPTION_SLEEP_BEFORE_UPDATE_LOCK    => $this->sleepBeforeUpdateLock(),
-            self::OPTION_SLEEP_WHEN_STREAM_NOT_FOUND => $this->sleepWhenStreamNotFound(),
             self::OPTION_UPDATE_LOCK_THRESHOLD       => $this->updateLockThreshold(),
             self::OPTION_PERSIST_BLOCK_SIZE          => $this->persistBlockSize(),
             self::OPTION_RETRIES_MS                  => $this->retriesMs(),
