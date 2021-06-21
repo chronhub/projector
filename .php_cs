@@ -27,6 +27,7 @@ return (new PhpCsFixer\Config)
             'sort_algorithm' => 'length',
             'imports_order'  => ['const', 'class', 'function'],
         ],
+        'no_unused_imports' => true,
     ])
     ->setRiskyAllowed(true)
     ->setFinder($finder);
